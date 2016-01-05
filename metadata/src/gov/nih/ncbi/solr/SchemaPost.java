@@ -42,7 +42,7 @@ public class SchemaPost {
 			List<String> config;
 			
 			if (db.equals(SolrDatabases.Annotations)) {
-				config = AnnotationsConfig.configList;
+				config = RecordConfig.configList;
 			}
 			else {
 				config = OntologyConfig.configList;
