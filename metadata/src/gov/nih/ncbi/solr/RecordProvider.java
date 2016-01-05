@@ -21,5 +21,5 @@ public class RecordProvider {
 	
 	private SolrClient solr = SolrProvider.getConnection(SolrDatabases.Annotations);
 	
-	public 
+	//public 
 }
