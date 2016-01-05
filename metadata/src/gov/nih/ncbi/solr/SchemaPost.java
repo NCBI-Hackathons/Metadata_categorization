@@ -1,6 +1,7 @@
 package gov.nih.ncbi.solr;
 
 import java.util.List;
+import java.util.Scanner;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.http.client.HttpClient;
@@ -20,8 +21,15 @@ import org.apache.http.impl.client.HttpClientBuilder;
 public class SchemaPost {
 	
 	public static void main(String args[]) throws Exception {
-		
-		String dbName = args[0];
+		String dbName;
+		try {
+			dbName = args[0];
+		} catch (Exception e){
+			System.out.println ("Please enter a valid database name: Annotations or Ontology");
+			Scanner scan = new Scanner (System.in);
+			dbName = scan.nextLine();
+			scan.close();			
+		}
 		SolrDatabases db;
 		if (dbName.equalsIgnoreCase("Annotations")) {
 			db = SolrDatabases.Annotations;
@@ -48,15 +56,15 @@ public class SchemaPost {
 				config = OntologyConfig.configList;
 			}
 			
-			config.stream().forEach(field -> {
-				try {
-					post.setEntity(new StringEntity(field));
+			for(String f: config) {
+					try {
+					post.setEntity(new StringEntity(f));
 					System.out.println(IOUtils.toString(client.execute(post).getEntity().getContent()));
 				}
 				catch (Exception e) {
 					e.printStackTrace();
 				}
-			});
+			}
 		
 		} catch (Exception e1) {
 			e1.printStackTrace();
