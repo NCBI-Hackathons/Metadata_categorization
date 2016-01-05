@@ -1,5 +1,12 @@
 #!/usr/bin/perl
 
+# A script to parse "useful" portions of the biosample.xml file
+#  (from ftp://ftp.ncbi.nlm.nih.gov/biosample/biosample_set.xml.gz)
+# This assumes the XML is organized such that the basic unit is <BioSample>,
+#   which has no <BioSample>s inside it's definition. This holds for the way 
+#   the file is organized and makes sense, but is not technically guarenteed 
+#   by the XML format.
+
 binmode STDOUT, ":encoding(UTF-8)";
 
 use XML::LibXML;
@@ -13,14 +20,18 @@ print $header;
 $counter = 0;
 $humanCounter = 0;
 
+# read in the file, one line at a time
 while (<>) {
+    # if we find a new BioSample
     if (/^<BioSample.*/) {
 	$counter++;
 	if (($counter % 1000) == 0) {
 	    print STDERR "Looked at $counter BioSamples, $humanCounter humans encountered so far\n";
 	}
+	# Empty previous data
 	$soFar = '';
     }
+    # append this line to our data so far
     $soFar .= $_;
     if (/^<\/BioSample>/) {
 	# if it's not human, don't bother parsing it
@@ -28,14 +39,13 @@ while (<>) {
 
 	$humanCounter++;
 	
+	# take the XML for this BioSample and parse it
 	$doc  = undef;
 	$iter = undef;
 	$doc  = XML::LibXML->new->parse_string($soFar);
 	$iter = XML::LibXML::Iterator->new($doc);
 	
-	# not sure what this does
-#	$iter->iterator_function ( \&iterator_function );
-
+	# Initialize these as empty fields
 	$BioSampleAccession    = '.';
 	$BioSampleID           = '.';
 	$SRA_ID                = '.';
@@ -52,12 +62,14 @@ while (<>) {
 	$description_title     = '.';
 	$description_paragraph = '.';
 
+	# iterate through the XML nodes (the root node appears as a string containing the entire record
 	while ($cur = $iter->nextNode) {
 	    $wholeStr = $cur;
+	    # if we're at the smallest portion to extract data, do it
 	    if ($wholeStr =~ /^\s*<BioSample.*?id="(\d+)"\s+accession="([A-Z\d]+)"/) {
 		$BioSampleID = $1;
 		$BioSampleAccession = $2;
-	    } elsif ($wholeStr =~ /^\s*<Id\sdb="SRA">([A-Z\d]+)<\/Id>\s*$/) {
+	    } elsif ($wholeStr =~ /^\s*<Id\sdb="SRA"[^>]*>([A-Z\d]+)<\/Id>\s*$/) {
 		$SRA_ID = $1;
 	    } elsif ($wholeStr =~ /^\s*<Attribute\s+attribute_name="([^"]+)"[^>]*>([^<]+)<\/Attribute>\s*$/) {
 		$att_name = $1;
@@ -87,6 +99,7 @@ while (<>) {
 	    }
 	}
 
+	# output this record
 	$outputStr = sprintf("%s\t%d\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n",
 			     $SRA_ID, $BioSampleID, $BioSampleAccession, $description_title,
 			     $description_paragraph, $organism, $sample_name, $sample_title,
