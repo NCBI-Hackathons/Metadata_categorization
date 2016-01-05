@@ -12,8 +12,13 @@ import org.apache.solr.client.solrj.impl.HttpSolrClient;
  */
 public class SolrProvider {	
 	
-	public static final SolrClient getConnection (SolrDatabases db) throws Exception {
-		return new HttpSolrClient(SolrConstants.getUrl(db));
+	public static final SolrClient getConnection (SolrDatabases db) {
+		try {
+			return new HttpSolrClient(SolrConstants.getUrl(db));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 }

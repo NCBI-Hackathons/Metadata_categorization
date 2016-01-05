@@ -15,11 +15,17 @@ public class RecordConfig {
 	
 	public static List<String> configList = Arrays.asList(
 			"{add-field: {name: sraId, type: int, indexed: true, stored:true, multiValued:false }",
-			"{add-field: {name: cellLine, type: text_general, indexed: true, stored:true, multiValued:false }",
-			"{add-field: {name: cellType, type: text_general, indexed: true, stored:true, multiValued:false }",
-			"{add-field: {name: species, type: text_general, indexed: true, stored:true, multiValued:false }",
-			"{add-field: {name: anatomy, type: text_general, indexed: true, stored:true, multiValued:false }",
-			"{add-field: {name: disease, type: text_general, indexed: true, stored:true, multiValued:false }",
-			"{add-field: {name: cellTreatment, type: text_general, indexed: true, stored:true, multiValued:false }",
+			"{add-field: {name: sourceCellLine, type: text_general, indexed: true, stored:true, multiValued:false }",
+			"{add-field: {name: sourceCellType, type: text_general, indexed: true, stored:true, multiValued:false }",
+			"{add-field: {name: sourceSpecies, type: text_general, indexed: true, stored:true, multiValued:false }",
+			"{add-field: {name: sourceAnatomy, type: text_general, indexed: true, stored:true, multiValued:false }",
+			"{add-field: {name: sourceDisease, type: text_general, indexed: true, stored:true, multiValued:false }",
+			"{add-field: {name: sourceCellTreatment, type: text_general, indexed: true, stored:true, multiValued:false }",
+			"{add-field: {name: annotCellLine, type: text_general, indexed: true, stored:true, multiValued:false }",
+			"{add-field: {name: annotCellType, type: text_general, indexed: true, stored:true, multiValued:false }",
+			"{add-field: {name: annotSpecies, type: text_general, indexed: true, stored:true, multiValued:false }",
+			"{add-field: {name: annotAnatomy, type: text_general, indexed: true, stored:true, multiValued:false }",
+			"{add-field: {name: annotDisease, type: text_general, indexed: true, stored:true, multiValued:false }",
+			"{add-field: {name: sourceCellTreatment, type: text_general, indexed: true, stored:true, multiValued:false }",
 			"{add-field: {name: note, type: text_general, indexed: true, stored:true, multiValued:false }");
-	}
+}

@@ -1,5 +1,7 @@
 package gov.nih.ncbi.solr;
 
+import org.apache.solr.client.solrj.SolrClient;
+
 /**
  * @author Lena Pons
  * NCBI Hackathon 2016 - Metadata Sorting group
@@ -10,5 +12,6 @@ package gov.nih.ncbi.solr;
  */
 
 public class OntologyProvider {
-
+	
+	private SolrClient solr = SolrProvider.getConnection(SolrDatabases.Ontology);
 }
