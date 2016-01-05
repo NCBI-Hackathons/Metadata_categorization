@@ -15,10 +15,6 @@ class IndexView(generic.TemplateView):
 class QueueView(generic.TemplateView):
     template_name = 'metadata_categorization/queue.html'
 
-    queue = {
-
-    }
-
     # curationQueue
     # ID
     # list summaryRecord
@@ -27,66 +23,75 @@ class QueueView(generic.TemplateView):
     # list
     # individualRecord term|cell line|cell type|anatomy|species|disease|note
 
-
-    individualRecords = [
+    summaryRecords = [
         {
-            "id": 12,
-            "cell line": {"source": "HeLa", "annotation": ""},
-            "cell type": {"source": "epf tm", "annotation": ""},
-            "cell treatment": {"source": "firboblast", "annotation": ""},
-            "anatomy": {"source": "Folderol", "annotation": ""},
-            "species": {"source": "human", "annotation": ""},
-            "disease": {"source": "gout", "annotation": ""},
-            "note": ""
+            "sourceCellLine": "HeLa",
+            "individualRecords": [
+                {
+                    "id": 12,
+                    "sourceCellLine": "HeLa",
+                    "sourceCellType": "epf tm",
+                    "sourceCellTreatment": "firboblast",
+                    "sourceCellAnatomy": "firboblast",
+                    "sourceSpecies": "Folderol",
+                    "sourceSpecies": "human",
+                    "sourceDisease": "gout",
+                    "annotatedCellLine": "",
+                    "annotatedCellType": "",
+                    "annotatedCellTreatment": "",
+                    "annotatedCellAnatomy": "",
+                    "annotatedSpecies": "",
+                    "annotatedSpecies": "",
+                    "annotatedDisease": "",
+                    "note": ""
+                }
+            ]
         },
         {
-            "id": 1234,
-            "cell line": {"source": "epf-1", "annotation": ""},
-            "cell type": {"source": "epf tm", "annotation": ""},
-            "cell treatment": {"source": "firboblast", "annotation": ""},
-            "anatomy": {"source": "Folderol", "annotation": ""},
-            "species": {"source": "human", "annotation": ""},
-            "disease": {"source": "gout", "annotation": ""},
-            "note": ""
-        },
-        {
-            "id": 12345,
-            "cell line": {"source": "epf-1", "annotation": ""},
-            "cell type": {"source": "epf tm", "annotation": ""},
-            "cell treatment": {"source": "firboblast", "annotation": ""},
-            "anatomy": {"source": "Folderol", "annotation": ""},
-            "species": {"source": "human", "annotation": ""},
-            "disease": {"source": "gout", "annotation": ""},
-            "note": ""
-        }
-        {
-            "id": 12,
-            "cell line": {"source": "epf-1", "annotation": ""},
-            "cell type": {"source": "epf tm", "annotation": ""},
-            "cell treatment": {"source": "firboblast", "annotation": ""},
-            "anatomy": {"source": "Folderol", "annotation": ""},
-            "species": {"source": "human", "annotation": ""},
-            "disease": {"source": "gout", "annotation": ""},
-            "note": ""
-        },
-        {
-            "id": 123,
-            "cell line": {"source": "epf-1", "annotation": ""},
-            "cell type": {"source": "epf tm", "annotation": ""},
-            "cell treatment": {"source": "firboblast", "annotation": ""},
-            "anatomy": {"source": "Folderol", "annotation": ""},
-            "species": {"source": "human", "annotation": ""},
-            "disease": {"source": "gout", "annotation": ""},
-            "note": ""
-        },
-        {
-            "id": 12345,
-            "cell line": {"source": "epf-1", "annotation": ""},
-            "cell type": {"source": "epf tm", "annotation": ""},
-            "cell treatment": {"source": "firboblast", "annotation": ""},
-            "anatomy": {"source": "Folderol", "annotation": ""},
-            "species": {"source": "human", "annotation": ""},
-            "disease": {"source": "gout", "annotation": ""},
-            "note": ""
+            "sourceCellLine": "epf-1",
+            "individualRecords": [
+                {
+                    "id": 1234,
+                    "sourceCellLine": "epf-1",
+                    "sourceCellType": "epf tm",
+                    "sourceCellTreatment": "firboblast",
+                    "sourceCellAnatomy": "firboblast",
+                    "sourceSpecies": "Folderol",
+                    "sourceSpecies": "human",
+                    "sourceDisease": "gout",
+                    "annotatedCellLine": "",
+                    "annotatedCellType": "",
+                    "annotatedCellTreatment": "",
+                    "annotatedCellAnatomy": "",
+                    "annotatedSpecies": "",
+                    "annotatedSpecies": "",
+                    "annotatedDisease": "",
+                    "note": ""
+                },
+                {
+                    "id": 12345,
+                    "sourceCellLine": "epf-1",
+                    "sourceCellType": "",
+                    "sourceCellTreatment": "",
+                    "sourceCellAnatomy": "firboblast",
+                    "sourceSpecies": "",
+                    "sourceSpecies": "human",
+                    "sourceDisease": "gout",
+                    "annotatedCellLine": "",
+                    "annotatedCellType": "",
+                    "annotatedCellTreatment": "",
+                    "annotatedCellAnatomy": "",
+                    "annotatedSpecies": "",
+                    "annotatedSpecies": "",
+                    "annotatedDisease": "",
+                    "note": ""
+                }
+            ]
         }
     ]
+
+
+    queue = {
+        "id": 42,
+        "summaryRecords": summaryRecords
+    }
