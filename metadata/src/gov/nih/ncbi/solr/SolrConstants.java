@@ -18,7 +18,7 @@ public class SolrConstants {
 	}
 	
 	public static String getAnnotationUrl() {
-		return PREFERENCES.get("url", "localhost:8983/solr/annotation");
+		return PREFERENCES.get("url", "http://localhost:8983/solr/annotation");
 	}
 	
 	public static void setOntologyUrl(String url) {
@@ -26,7 +26,7 @@ public class SolrConstants {
 	}
 	
 	public static String getOntologyUrl() {
-		return PREFERENCES.get("ontology_url", "localhost:8983/solr/ontology");
+		return PREFERENCES.get("ontology_url", "http://localhost:8983/solr/ontology");
 	}
 	
 	public static String getUrl(SolrDatabases db) throws Exception {
