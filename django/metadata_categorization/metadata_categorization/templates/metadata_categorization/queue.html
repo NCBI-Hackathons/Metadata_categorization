@@ -1,1 +1,39 @@
-Queue!
+<html>
+<head>
+</head>
+<body>
+  <table>
+    <thead>
+      <tr>
+        <td>Submitted cell line</td>
+        <td>Cell line</td>
+        <td>Cell type</td>
+        <td>Anatomy</td>
+        <td>Species</td>
+        <td>Disease</td>
+    </thead>
+    {% for summaryRecord in summaryRecords %}
+    <tbody>
+      <tr>
+        <td>{{ summaryRecord.sourceCellLine }}</td>
+        <td>{{ summaryRecord.annotatedCellLine }}</td>
+        <td>{{ summaryRecord.annotatedCellType }}</td>
+        <td>{{ summaryRecord.annotatedAnatomy }}</td>
+        <td>{{ summaryRecord.annotatedSpecies }}</td>
+        <td>{{ summaryRecord.annotatedDisease }}</td>
+      </tr>
+      {% for individualRecord in summaryRecord.individualRecords %}
+      <tr class="individualRecord">
+        <td>{{ individualRecord.submittedCellLine }}</td>
+        <td>{{ individualRecord.sourceCellLine }}</td>
+        <td>{{ individualRecord.sourceCellType }}</td>
+        <td>{{ individualRecord.sourceAnatomy }}</td>
+        <td>{{ individualRecord.sourceSpecies }}</td>
+        <td>{{ individualRecord.sourceDisease }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+    {% endfor %}
+  </table>
+</body>
+</html>
