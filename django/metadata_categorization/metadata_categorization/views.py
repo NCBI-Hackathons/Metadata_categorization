@@ -22,76 +22,76 @@ class QueueView(generic.TemplateView):
     # list indivdualRecord
     # list
     # individualRecord term|cell line|cell type|anatomy|species|disease|note
+    def get_context_data(self, **kwargs):
 
-    summaryRecords = [
-        {
-            "sourceCellLine": "HeLa",
-            "individualRecords": [
-                {
-                    "id": 12,
-                    "sourceCellLine": "HeLa",
-                    "sourceCellType": "epf tm",
-                    "sourceCellTreatment": "firboblast",
-                    "sourceCellAnatomy": "firboblast",
-                    "sourceSpecies": "Folderol",
-                    "sourceSpecies": "human",
-                    "sourceDisease": "gout",
-                    "annotatedCellLine": "",
-                    "annotatedCellType": "",
-                    "annotatedCellTreatment": "",
-                    "annotatedCellAnatomy": "",
-                    "annotatedSpecies": "",
-                    "annotatedSpecies": "",
-                    "annotatedDisease": "",
-                    "note": ""
-                }
-            ]
-        },
-        {
-            "sourceCellLine": "epf-1",
-            "individualRecords": [
-                {
-                    "id": 1234,
-                    "sourceCellLine": "epf-1",
-                    "sourceCellType": "epf tm",
-                    "sourceCellTreatment": "firboblast",
-                    "sourceCellAnatomy": "firboblast",
-                    "sourceSpecies": "Folderol",
-                    "sourceSpecies": "human",
-                    "sourceDisease": "gout",
-                    "annotatedCellLine": "",
-                    "annotatedCellType": "",
-                    "annotatedCellTreatment": "",
-                    "annotatedCellAnatomy": "",
-                    "annotatedSpecies": "",
-                    "annotatedSpecies": "",
-                    "annotatedDisease": "",
-                    "note": ""
-                },
-                {
-                    "id": 12345,
-                    "sourceCellLine": "epf-1",
-                    "sourceCellType": "",
-                    "sourceCellTreatment": "",
-                    "sourceCellAnatomy": "firboblast",
-                    "sourceSpecies": "",
-                    "sourceSpecies": "human",
-                    "sourceDisease": "gout",
-                    "annotatedCellLine": "",
-                    "annotatedCellType": "",
-                    "annotatedCellTreatment": "",
-                    "annotatedCellAnatomy": "",
-                    "annotatedSpecies": "",
-                    "annotatedSpecies": "",
-                    "annotatedDisease": "",
-                    "note": ""
-                }
-            ]
-        }
-    ]
+        context = super(QueueView, self).get_context_data()
 
+        summaryRecords = [
+            {
+                "sourceCellLine": "HeLa",
+                "individualRecords": [
+                    {
+                        "id": 12,
+                        "sourceCellLine": "HeLa",
+                        "sourceCellType": "epf tm",
+                        "sourceCellTreatment": "firboblast",
+                        "sourceCellAnatomy": "firboblast",
+                        "sourceSpecies": "Folderol",
+                        "sourceSpecies": "human",
+                        "sourceDisease": "gout",
+                        "annotatedCellLine": "",
+                        "annotatedCellType": "",
+                        "annotatedCellTreatment": "",
+                        "annotatedCellAnatomy": "",
+                        "annotatedSpecies": "",
+                        "annotatedSpecies": "",
+                        "annotatedDisease": "",
+                        "note": ""
+                    }
+                ]
+            },
+            {
+                "sourceCellLine": "epf-1",
+                "individualRecords": [
+                    {
+                        "id": 1234,
+                        "sourceCellLine": "epf-1",
+                        "sourceCellType": "epf tm",
+                        "sourceCellTreatment": "firboblast",
+                        "sourceCellAnatomy": "firboblast",
+                        "sourceSpecies": "Folderol",
+                        "sourceSpecies": "human",
+                        "sourceDisease": "gout",
+                        "annotatedCellLine": "",
+                        "annotatedCellType": "",
+                        "annotatedCellTreatment": "",
+                        "annotatedCellAnatomy": "",
+                        "annotatedSpecies": "",
+                        "annotatedSpecies": "",
+                        "annotatedDisease": "",
+                        "note": ""
+                    },
+                    {
+                        "id": 12345,
+                        "sourceCellLine": "epf-1",
+                        "sourceCellType": "",
+                        "sourceCellTreatment": "",
+                        "sourceCellAnatomy": "firboblast",
+                        "sourceSpecies": "",
+                        "sourceSpecies": "human",
+                        "sourceDisease": "gout",
+                        "annotatedCellLine": "",
+                        "annotatedCellType": "",
+                        "annotatedCellTreatment": "",
+                        "annotatedCellAnatomy": "",
+                        "annotatedSpecies": "",
+                        "annotatedSpecies": "",
+                        "annotatedDisease": "",
+                        "note": ""
+                    }
+                ]
+            }
+        ]
 
-    queue = {
-        "id": 42,
-        "summaryRecords": summaryRecords
-    }
+        context["id"] = 42
+        context["summaryRecords"] = summaryRecords
