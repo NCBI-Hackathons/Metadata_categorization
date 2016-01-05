@@ -1,0 +1,13 @@
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+
+repositories {
+    mavenCentral()
+    jcenter()
+}
+
+dependencies {
+   compile 'org.apache.solr:solr-solrj:5.4.0'
+}
+

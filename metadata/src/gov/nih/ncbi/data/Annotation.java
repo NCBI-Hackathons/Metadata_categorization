@@ -12,7 +12,7 @@ public class Annotation {
 	private String cellLine;
 	private String cellType;
 	private String sampleName;
-	private String SampleTitle;
+	private String sampleTitle;
 	private String shortDescription;
 	private String organism;
 	private String tissue;
@@ -33,11 +33,11 @@ public class Annotation {
 	}
 
 	public String getSampleTitle() {
-		return SampleTitle;
+		return sampleTitle;
 	}
 
 	public void setSampleTitle(String sampleTitle) {
-		SampleTitle = sampleTitle;
+		sampleTitle = sampleTitle;
 	}
 
 	public String getShortDescription() {
