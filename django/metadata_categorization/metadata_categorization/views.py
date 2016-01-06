@@ -60,7 +60,7 @@ class QueueView(generic.TemplateView):
         summaryRecord.update(sourceFields)
         summaryRecord.update(annotFields)
 
-        print(len(individualRecords))
+        #print(len(individualRecords))
 
         tmpIRs = []
         for i, individualRecord in enumerate(individualRecords):
@@ -78,9 +78,11 @@ class QueueView(generic.TemplateView):
 
         individualRecords = tmpIRs
 
+        #print(individualRecords)
+
         for i, individualRecord in enumerate(individualRecords):
-            if "sourceCellLine" not in individualRecords[i]:
-                print('"sourceCellLine" not in individualRecords[i]')
+            if "sourceCellLine" not in individualRecord:
+                print('"sourceCellLine" not in individualRecord')
                 individualRecords[i]["sourceCellLine"] = ""
 
             cellLine = individualRecords[i]["sourceCellLine"]
@@ -88,7 +90,7 @@ class QueueView(generic.TemplateView):
             if i == 0:
                 prevCellLine = ""
             else:
-                prevCellLine = individualRecords[-1]["sourceCellLine"]
+                prevCellLine = individualRecords[i-1]["sourceCellLine"]
 
             if cellLine == prevCellLine:
                 summaryRecord["individualRecords"].append(individualRecord)
@@ -233,11 +235,9 @@ class QueueView(generic.TemplateView):
 
         str_response = response.readall().decode('utf-8')
 
-        #print(str_response)
-
         solr_data = json.loads(str_response)["response"]["docs"]
 
-        print(solr_data)
+        #print(solr_data)
 
         context['solr_data'] = self.getSummaryRecords(solr_data)
 
