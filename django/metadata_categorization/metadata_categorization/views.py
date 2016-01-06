@@ -18,7 +18,7 @@ class IndexView(generic.TemplateView):
 class QueueView(generic.TemplateView):
     template_name = 'metadata_categorization/queue.html'
 
-    def getSummaryRecords(individualRecords):
+    def getSummaryRecords(self, individualRecords):
         """
         Aggregates individual Biosample (SRA or GEO) records into
         "summary records" shown as top-level table rows in the UI.  Individual
@@ -55,22 +55,34 @@ class QueueView(generic.TemplateView):
 
         summaryRecords = []
 
-        summaryRecord = {"individualRecords": []}.update(sourceFields).update(annotatedFields)
+        summaryRecord = {"individualRecords": []}
+        summaryRecord.update(sourceFields)
+        summaryRecord.update(annotatedFields)
 
         for i, individualRecord in enumerate(individualRecords):
+            print(individualRecord)
 
-            cellLine = individualRecord[i]["sourceCellLine"]
+            for field in individualRecord:
+                if individualRecord[field] == 0:
+                    individualRecord[field] = ""
+
+            if "sourceCellLine" not in individualRecords[i]:
+                individualRecords[i]["sourceCellLine"] = ""
+
+            cellLine = individualRecords[i]["sourceCellLine"]
 
             if i == 0:
                 prevCellLine = ""
             else:
-                prevCellLine = individualRecord[-1]["sourceCellLine"]
+                prevCellLine = individualRecords[-1]["sourceCellLine"]
 
             if cellLine == prevCellLine:
-                summaryRecord["individualRecords"].push(individualRecord)
+                summaryRecord["individualRecords"].append(individualRecord)
             else:
-                summaryRecords.push(summaryRecord)
-                summaryRecord = {"individualRecords": []}.update(sourceFields).update(annotatedFields)
+                summaryRecords.append(summaryRecord)
+                summaryRecord = {"individualRecords": []}
+                summaryRecord.update(sourceFields)
+                summaryRecord.update(annotatedFields)
 
         return summaryRecords
 
@@ -184,14 +196,14 @@ class QueueView(generic.TemplateView):
         # Refactor into modular methods and models
 
         # Call Solr
-        solr_host = "http://localhost:8983/solr/annotation"
+        solr_host = "http://localhost:8983/solr/AnnotationsDev"
 
         # %3A is :
         # sampleName%3A* is sampleName:*"
         url = (solr_host + "/select?" +
-              "q=*%3A*&" +
-              "start=0&" +
-              "rows=100&" +
+              "q=queueId%3A5+AND+sourceCellLine%3A*&" +
+              #"start=0&" +
+              #"rows=100&" +
               "wt=json&" +
               "indent=true&")
 
@@ -203,7 +215,9 @@ class QueueView(generic.TemplateView):
 
         solr_data = json.loads(str_response)["response"]["docs"]
 
-        context['solr_data'] = solr_data
+        print(solr_data)
+
+        context['solr_data'] = self.getSummaryRecords(solr_data)
 
         context["id"] = 42
         context["summaryRecords"] = summaryRecords
