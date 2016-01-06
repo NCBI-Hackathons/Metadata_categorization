@@ -33,6 +33,7 @@ class QueueView(generic.TemplateView):
         so we're doing it in the web tier.
         """
 
+
         sourceFields = {
             "sourceCellLine": "",
             "sourceCellType": "",
@@ -43,30 +44,45 @@ class QueueView(generic.TemplateView):
             "sourceDisease": ""
         }
 
-        annotatedFields = {
-            "annotatedCellLine": "",
-            "annotatedCellType": "",
-            "annotatedCellTreatment": "",
-            "annotatedCellAnatomy": "",
-            "annotatedSpecies": "",
-            "annotatedSpecies": "",
-            "annotatedDisease": ""
+        annotFields = {
+            "annotCellLine": "",
+            "annotCellType": "",
+            "annotCellTreatment": "",
+            "annotCellAnatomy": "",
+            "annotSpecies": "",
+            "annotSpecies": "",
+            "annotDisease": ""
         }
 
         summaryRecords = []
 
         summaryRecord = {"individualRecords": []}
         summaryRecord.update(sourceFields)
-        summaryRecord.update(annotatedFields)
+        summaryRecord.update(annotFields)
+
+        #print(len(individualRecords))
+
+        tmpIRs = []
+        for i, individualRecord in enumerate(individualRecords):
+            tmpIR = {}
+            for field in individualRecord:
+                thisField = individualRecord[field]
+                tmpIR[field] = thisField
+                if thisField == '0' or thisField == "   ":
+                    individualRecords[i][field] = ""
+                    individualRecord[field] = ""
+                    tmpIR[field] = ""
+
+            individualRecord = tmpIR
+            tmpIRs.append(individualRecord)
+
+        individualRecords = tmpIRs
+
+        #print(individualRecords)
 
         for i, individualRecord in enumerate(individualRecords):
-            print(individualRecord)
-
-            for field in individualRecord:
-                if individualRecord[field] == 0:
-                    individualRecord[field] = ""
-
-            if "sourceCellLine" not in individualRecords[i]:
+            if "sourceCellLine" not in individualRecord:
+                print('"sourceCellLine" not in individualRecord')
                 individualRecords[i]["sourceCellLine"] = ""
 
             cellLine = individualRecords[i]["sourceCellLine"]
@@ -74,15 +90,17 @@ class QueueView(generic.TemplateView):
             if i == 0:
                 prevCellLine = ""
             else:
-                prevCellLine = individualRecords[-1]["sourceCellLine"]
+                prevCellLine = individualRecords[i-1]["sourceCellLine"]
 
             if cellLine == prevCellLine:
                 summaryRecord["individualRecords"].append(individualRecord)
             else:
+                recordsCount = summaryRecord["individualRecords"]
+                summaryRecord['recordsCount'] = len(recordsCount)
                 summaryRecords.append(summaryRecord)
                 summaryRecord = {"individualRecords": []}
                 summaryRecord.update(sourceFields)
-                summaryRecord.update(annotatedFields)
+                summaryRecord.update(annotFields)
 
         return summaryRecords
 
@@ -106,13 +124,13 @@ class QueueView(generic.TemplateView):
                 "sourceTreatment": "Folderol",
                 "sourceSpecies": "human",
                 "sourceDisease": "gout",
-                "annotatedCellLine": "",
-                "annotatedCellType": "",
-                "annotatedCellTreatment": "",
-                "annotatedCellAnatomy": "",
-                "annotatedSpecies": "",
-                "annotatedSpecies": "",
-                "annotatedDisease": "",
+                "annotCellLine": "",
+                "annotCellType": "",
+                "annotCellTreatment": "",
+                "annotCellAnatomy": "",
+                "annotSpecies": "",
+                "annotSpecies": "",
+                "annotDisease": "",
                 "note": "",
                 "individualRecords": [
                     {
@@ -124,13 +142,13 @@ class QueueView(generic.TemplateView):
                         "sourceSpecies": "Folderol",
                         "sourceSpecies": "human",
                         "sourceDisease": "gout",
-                        "annotatedCellLine": "",
-                        "annotatedCellType": "",
-                        "annotatedCellTreatment": "",
-                        "annotatedCellAnatomy": "",
-                        "annotatedSpecies": "",
-                        "annotatedSpecies": "",
-                        "annotatedDisease": "",
+                        "annotCellLine": "",
+                        "annotCellType": "",
+                        "annotCellTreatment": "",
+                        "annotCellAnatomy": "",
+                        "annotSpecies": "",
+                        "annotSpecies": "",
+                        "annotDisease": "",
                         "note": ""
                     }
                 ]
@@ -143,13 +161,13 @@ class QueueView(generic.TemplateView):
                 "sourceSpecies": "Folderol",
                 "sourceSpecies": "human",
                 "sourceDisease": "gout",
-                "annotatedCellLine": "",
-                "annotatedCellType": "",
-                "annotatedCellTreatment": "",
-                "annotatedCellAnatomy": "",
-                "annotatedSpecies": "",
-                "annotatedSpecies": "",
-                "annotatedDisease": "",
+                "annotCellLine": "",
+                "annotCellType": "",
+                "annotCellTreatment": "",
+                "annotCellAnatomy": "",
+                "annotSpecies": "",
+                "annotSpecies": "",
+                "annotDisease": "",
                 "note": "",
                 "individualRecords": [
                     {
@@ -161,13 +179,12 @@ class QueueView(generic.TemplateView):
                         "sourceSpecies": "Folderol",
                         "sourceSpecies": "human",
                         "sourceDisease": "gout",
-                        "annotatedCellLine": "",
-                        "annotatedCellType": "",
-                        "annotatedCellTreatment": "",
-                        "annotatedCellAnatomy": "",
-                        "annotatedSpecies": "",
-                        "annotatedSpecies": "",
-                        "annotatedDisease": "",
+                        "annotCellLine": "",
+                        "annotCellType": "",
+                        "annotCellTreatment": "",
+                        "annotCellAnatomy": "",
+                        "annotSpecies": "",
+                        "annotDisease": "",
                         "note": ""
                     },
                     {
@@ -179,13 +196,12 @@ class QueueView(generic.TemplateView):
                         "sourceSpecies": "",
                         "sourceSpecies": "human",
                         "sourceDisease": "gout",
-                        "annotatedCellLine": "",
-                        "annotatedCellType": "",
-                        "annotatedCellTreatment": "",
-                        "annotatedCellAnatomy": "",
-                        "annotatedSpecies": "",
-                        "annotatedSpecies": "",
-                        "annotatedDisease": "",
+                        "annotCellLine": "",
+                        "annotCellType": "",
+                        "annotCellTreatment": "",
+                        "annotCellAnatomy": "",
+                        "annotSpecies": "",
+                        "annotDisease": "",
                         "note": ""
                     }
                 ]
@@ -196,16 +212,22 @@ class QueueView(generic.TemplateView):
         # Refactor into modular methods and models
 
         # Call Solr
-        solr_host = "http://localhost:8983/solr/AnnotationsDev"
+        #solr_host = "http://localhost:8983/solr/AnnotationsDev"
+        solr_host = "http://localhost:8983/solr/annotation"
 
         # %3A is :
         # sampleName%3A* is sampleName:*"
+
+        '''
         url = (solr_host + "/select?" +
-              "q=queueId%3A5+AND+sourceCellLine%3A*&" +
+              #"q=queueId%3A5&" +
+              'queueId%3A5+AND+NOT+sourceCellLine%3A"0"&'
               #"start=0&" +
-              #"rows=100&" +
+              #"rows=9999&" +
               "wt=json&" +
               "indent=true&")
+        '''
+        url = 'http://localhost:8983/solr/annotation/select?q=queueId%3A5+AND+NOT+sourceCellType%3A%220%22&rows=10000&wt=json&indent=true'
 
         request = urllib.request.Request(url)
 
@@ -215,7 +237,7 @@ class QueueView(generic.TemplateView):
 
         solr_data = json.loads(str_response)["response"]["docs"]
 
-        print(solr_data)
+        #print(solr_data)
 
         context['solr_data'] = self.getSummaryRecords(solr_data)
 
