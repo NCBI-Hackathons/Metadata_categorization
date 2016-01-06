@@ -10,11 +10,12 @@ package gov.nih.ncbi.data;
 
 public class OntologyEntry {
 	
-	private String cellLine;
-	private String cellType;
-	private String organism;
-	private String tissue;
-	private String disease;
+	private String cellLine; //CLOID - clo label
+	private String cellType; //??
+	private String organism; //taxonomy label
+	private String tissue; //uberon label
+	private String disease; //DOID label
+	
 	public String getCellLine() {
 		return cellLine;
 	}
