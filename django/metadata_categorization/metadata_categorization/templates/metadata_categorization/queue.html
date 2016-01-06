@@ -14,6 +14,7 @@
   <h1>Queue {{ id }} | Metadata categorization</h1>
   <table id="queue">
     <thead>
+      <th></th>
       <th>Submitted cell line</th>
       <th>Cell line</th>
       <th>Cell type</th>
@@ -23,7 +24,8 @@
     </thead>
     {% for summaryRecord in summaryRecords %}
     <tbody>
-      <tr>
+      <tr class="expandable">
+        <td><span class="arrow">+</span></td>
         <td>{{ summaryRecord.sourceCellLine }}</td>
         <td>{{ summaryRecord.annotatedCellLine }}</td>
         <td>{{ summaryRecord.annotatedCellType }}</td>
@@ -32,14 +34,21 @@
         <td>{{ summaryRecord.annotatedDisease }}</td>
       </tr>
       {% if summaryRecord.individualRecords|length > 0 %}
-      <tr><td>
+      <tr style="display: none;"><td colspan="7">
       <table>
         <thead>
-          <td></td>
+          <th></th>
+          <th>Submitted cell line</th>
+          <th>Cell line</th>
+          <th>Cell type</th>
+          <th>Anatomy</th>
+          <th>Species</th>
+          <th>Disease</th>
         </thead>
         <tbody>
           {% for individualRecord in summaryRecord.individualRecords %}
-            <tr class="individualRecord collapsed">
+            <tr class="individualRecord">
+              <td>&nbsp;</td>
               <td>{{ individualRecord.submittedCellLine }}</td>
               <td>{{ individualRecord.sourceCellLine }}</td>
               <td>{{ individualRecord.sourceCellType }}</td>
@@ -49,8 +58,8 @@
             </tr>
           {% endfor %}
         </tbody>
-    </table>
-    </td></tr>
+      </table>
+      </td></tr>
     {% endif %}
     </tbody>
     {% endfor %}
