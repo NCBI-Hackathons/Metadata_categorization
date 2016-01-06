@@ -1,4 +1,5 @@
 import json
+import urllib
 
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.views import generic
@@ -120,6 +121,31 @@ class QueueView(generic.TemplateView):
                 ]
             }
         ]
+
+        # TODO:
+        # Refactor into modular methods and models
+
+        # Call Solr
+        solr_host = "http://localhost:8983/solr/annotation"
+
+        # %3A is :
+        # sampleName%3A* is sampleName:*"
+        url = (solr_host + "/select?" +
+              "q=*%3A*&" +
+              "start=0&" +
+              "rows=100&" +
+              "wt=json&" +
+              "indent=true&")
+
+        request = urllib.request.Request(url)
+
+        response = urllib.request.urlopen(request)
+
+        str_response = response.readall().decode('utf-8')
+
+        solr_data = json.loads(str_response)["response"]["docs"]
+
+        context['solr_data'] = solr_data
 
         context["id"] = 42
         context["summaryRecords"] = summaryRecords
