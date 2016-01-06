@@ -18,14 +18,16 @@ public class TsvParser {
 	private static Map<String, Integer> headers = new HashMap<>();
 	private String filename;
 	private static BufferedReader tsvReader;
-	private String dataRow;
 	private String [] dataArray;
 	
 	public TsvParser (String file) throws FileNotFoundException {
 		this.filename = file;
 		tsvReader = new BufferedReader (new FileReader (filename));
 	}
-	
+	/**
+	 * initialize header mapping, allows user to use String column names instead of indices
+	 * @throws IOException
+	 */
 	public void readHeaders () throws IOException{
 		
 		String readLine = tsvReader.readLine();
@@ -35,7 +37,11 @@ public class TsvParser {
 		}
 		
 	}
-	
+	/**
+	 * flag for iterating over the tsv file
+	 * @return true when there are more records in the file
+	 * @throws IOException
+	 */
 	public boolean readRecord () throws IOException{
 		String dataRow = tsvReader.readLine();
 		while (dataRow != null) {
@@ -44,7 +50,11 @@ public class TsvParser {
 		}
 		return false;
 	}
-	
+	/**
+	 * access a field by header name (column)
+	 * @param header
+	 * @return value contained in the file in that column
+	 */
 	public String get(String header) {
 		return dataArray[headers.get(header)];
 	}

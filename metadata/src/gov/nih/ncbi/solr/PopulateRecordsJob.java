@@ -4,7 +4,24 @@ import gov.nih.ncbi.data.TsvParser;
 
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.common.SolrInputDocument;
-
+/**
+ * 
+ * @author Lena Pons
+ * NCBI Hackathon 2016 - Metadata Sorting group
+ * 
+ * reads in BioSample data from tsv and populates the Annotations or AnnotationsDev solr core
+ * 
+ * tsv file must include these fields 
+ * (=> indicates which solr fields are populated from these source data):
+ * BioSampleId  => id
+ * Cell_Line, Sample_Name, Sample_Title, ExperimentTitle => sourceCellLine
+ * Cell_Type => sourceCellType
+ * Organism => sourceSpecies
+ * Tissue => sourceAnatomy
+ * Disease, Health_State, Phenotype => sourceDisease
+ * Treatment => sourceCellTreatment
+ *
+ */
 public class PopulateRecordsJob {
 	
 	public static void main(String[] args) {
