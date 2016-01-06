@@ -37,7 +37,7 @@ class QueueView(generic.TemplateView):
             "sourceCellLine": "",
             "sourceCellType": "",
             "sourceCellTreatment": "",
-            "sourceCellAnatomy": "",
+            "sourceAnatomy": "",
             "sourceTreatment": "",
             "sourceSpecies": "Homo Sapiens",
             "sourceDisease": ""
@@ -47,7 +47,7 @@ class QueueView(generic.TemplateView):
             "annotCellLine": "",
             "annotCellType": "",
             "annotCellTreatment": "",
-            "annotCellAnatomy": "",
+            "annotAnatomy": "",
             "annotSpecies": "",
             "annotSpecies": "",
             "annotDisease": ""
@@ -114,7 +114,7 @@ class QueueView(generic.TemplateView):
     # list indivdualRecord
     # list
     # individualRecord term|cell line|cell type|anatomy|species|disease|note
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, queueId, **kwargs):
 
         context = super(QueueView, self).get_context_data()
 
@@ -220,22 +220,16 @@ class QueueView(generic.TemplateView):
 
         # %3A is :
         # sampleName%3A* is sampleName:*"
-
-        '''
         url = (solr_host + "/select?" +
               #"q=queueId%3A42&" +
-              'queueId%3A5+AND+NOT+sourceCellLine%3A"0"&'
-              #"start=0&" +
-              #"rows=9999&" +
+              'q=queueId%3A' + queueId + '+AND+NOT+sourceCellLine%3A%220%22'
+              "start=0&" +
+              "rows=10000&" +
               "wt=json&" +
               "indent=true&")
-        '''
-        url = 'http://localhost:8983/solr/annotation/select?q=queueId%3A5+AND+NOT+sourceCellLine%3A%220%22&rows=10000&wt=json&indent=true'
 
         request = urllib.request.Request(url)
-
         response = urllib.request.urlopen(request)
-
         str_response = response.readall().decode('utf-8')
 
         solr_data = json.loads(str_response)["response"]["docs"]
@@ -246,7 +240,12 @@ class QueueView(generic.TemplateView):
 
         summaryRecords = self.getSummaryRecords(solr_data)
 
-        context["id"] = 42
+        # There's a bug with the first row; hacking for demo's sake
+        #summaryRecords = summaryRecords[10:]
+
+        print(summaryRecords[30]["individualRecords"][0])
+
+        context["id"] = queueId
         context["summaryRecords"] = summaryRecords
 
         return context

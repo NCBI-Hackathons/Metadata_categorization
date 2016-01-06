@@ -48,8 +48,7 @@ var iTableCounter = 1;
               { "mDataProp": "sourceCellLine"},
               { "mDataProp": "sourceCellType"},
               { "mDataProp": "sourceCellTreatment"},
-              { "mDataProp": "sourceCellAnatomy"},
-              { "mDataProp": "sourceSpecies"},
+              { "mDataProp": "sourceAnatomy"},
               { "mDataProp": "sourceSpecies"},
               { "mDataProp": "sourceDisease"}
           ],
@@ -88,8 +87,7 @@ var iTableCounter = 1;
                     { "mDataProp": "sourceCellLine"},
                     { "mDataProp": "sourceCellType"},
                     { "mDataProp": "sourceCellTreatment"},
-                    { "mDataProp": "sourceCellAnatomy"},
-                    { "mDataProp": "sourceSpecies"},
+                    { "mDataProp": "sourceAnatomy"},
                     { "mDataProp": "sourceSpecies"},
                     { "mDataProp": "sourceDisease"}
     	            ],
