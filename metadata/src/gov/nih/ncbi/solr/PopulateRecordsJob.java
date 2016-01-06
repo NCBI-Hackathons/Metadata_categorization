@@ -1,12 +1,27 @@
 package gov.nih.ncbi.solr;
 
-import java.util.Scanner;
-
 import gov.nih.ncbi.data.TsvParser;
 
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.common.SolrInputDocument;
-
+/**
+ * 
+ * @author Lena Pons
+ * NCBI Hackathon 2016 - Metadata Sorting group
+ * 
+ * reads in BioSample data from tsv and populates the Annotations or AnnotationsDev solr core
+ * 
+ * tsv file must include these fields 
+ * (=> indicates which solr fields are populated from these source data):
+ * BioSampleId  => id
+ * Cell_Line, Sample_Name, Sample_Title, ExperimentTitle => sourceCellLine
+ * Cell_Type => sourceCellType
+ * Organism => sourceSpecies
+ * Tissue => sourceAnatomy
+ * Disease, Health_State, Phenotype => sourceDisease
+ * Treatment => sourceCellTreatment
+ *
+ */
 public class PopulateRecordsJob {
 	
 	public static void main(String[] args) {
@@ -30,6 +45,7 @@ public class PopulateRecordsJob {
 			parser.readHeaders();
 			int count = 0;
 			int queueId = 1;
+			
 			while (parser.readRecord()) {
 				SolrInputDocument doc = new SolrInputDocument ();
 				doc.setField("queueId", queueId);
@@ -47,37 +63,53 @@ public class PopulateRecordsJob {
 					if (!parser.get("Cell_Line").equals(".")) {
 						doc.addField("sourceCellLine", parser.get("Cell_Line"));
 					}
-					else {
-						if (!parser.get("Sample_Name").equals(".")){
+					else if (!parser.get("Sample_Name").equals(".")){
 							doc.addField("sourceCellLine", parser.get("Sample_Name"));
-						}
-						else if (! parser.get("Sample_Title").equals(".")){
-							doc.addField("sourceCellLine", parser.get("Sample_Title"));
-						}
-						else {
-							doc.addField("sourceCellLine", "");
-						}
 					}
+					else if (! parser.get("Sample_Title").equals(".")){
+						doc.addField("sourceCellLine", parser.get("Sample_Title"));
+					}
+					else if (! parser.get("ExperimentTitle").equals(".")){
+						doc.addField("sourceCellLine", parser.get("ExperimentTitle"));
+					}
+					else {
+//						System.err.println("No available data for this field");
+						doc.addField("sourceCellLine", "0");
+					}				
 					
 					if (!parser.get("Sample_Name").equals(".")){
 						doc.addField("sampleName", parser.get("Sample_Name"));
 							
 					}
+					else {
+						doc.addField("sampleName", "0");
+					}
 					if (!parser.get("Sample_Title").equals(".")){
 						doc.addField("sampleTitle", parser.get("Sample_Title"));
 							
 					}
+					else {
+						doc.addField("sampleTitle", "0");
+					}
 					if (!parser.get("Cell_Type").equals(".")){
 						doc.addField("sourceCellType", parser.get("Cell_Type"));
-							
+					}
+					else {
+						doc.addField("sourceCellType", "0");
 					}
 					if (!parser.get("Organism").equals(".")){
 						doc.addField("sourceSpecies", parser.get("Organism"));
 							
 					}
+					else {
+						doc.addField("sourceSpecies", "0");
+					}
 					if (!parser.get("Tissue").equals(".")){
 						doc.addField("sourceAnatomy", parser.get("Tissue"));
 							
+					}
+					else {
+						doc.addField("sourceAnatomy", "0");
 					}
 					//construct disease blob
 					String disease = "";
@@ -96,11 +128,25 @@ public class PopulateRecordsJob {
 					build.append(disease + " ");
 					build.append(healthState + " ");
 					build.append(phenotype);
-					doc.addField("sourceDisease", build.toString());
-					if (!parser.get("Treatment").equals(".")){
-						doc.addField("sourceCellTreatment", parser.get("Treatment"));
-							
+					if (!build.toString().equals("   ")){
+						doc.addField("sourceDisease", build.toString());
 					}
+					else{
+						doc.addField("sourceDisease", "0");
+					}
+					if (!parser.get("Treatment").equals(".")){
+						doc.addField("sourceCellTreatment", parser.get("Treatment"));							
+					}
+					else{
+						doc.addField("sourceCellTreatment", "0");
+					}
+					//set all the annotation fields to default 0
+					doc.addField("annotCellLine", "0");
+					doc.addField("annotCellType", "0");
+					doc.addField("annotSpecies", "0");
+					doc.addField("annotAnatomy", "0");
+					doc.addField("annotCellTreatment", "0");
+										
 				} catch (ArrayIndexOutOfBoundsException e) {			
 					continue;
 				}
@@ -118,6 +164,7 @@ public class PopulateRecordsJob {
 				} catch (Exception e) {
 //					e.printStackTrace();
 					System.err.println(parser.get("BioSampleId") + "Skipped");
+					continue;
 				}
 				
 			}

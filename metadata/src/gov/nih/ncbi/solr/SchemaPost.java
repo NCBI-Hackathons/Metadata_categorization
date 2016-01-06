@@ -16,12 +16,13 @@ import org.apache.http.impl.client.HttpClientBuilder;
  * 2016-01-04
  * 
  * create and configure the solr schema
- *
+ * reads in user-defined schema configuration
  */
 public class SchemaPost {
 	
 	public static void main(String args[]) throws Exception {
 		String dbName;
+		
 		try {
 			dbName = args[0];
 		} catch (Exception e){
@@ -30,6 +31,7 @@ public class SchemaPost {
 			dbName = scan.nextLine();
 			scan.close();			
 		}
+		
 		SolrDatabases db;
 		if (dbName.equalsIgnoreCase("Annotations")) {
 			db = SolrDatabases.Annotations;
