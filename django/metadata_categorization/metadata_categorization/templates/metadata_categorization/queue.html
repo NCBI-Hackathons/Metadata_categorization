@@ -8,23 +8,18 @@
   <link rel="stylesheet" type="text/css" href="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.0/css/jquery.dataTables.css"/>
   <link type="text/css" rel="stylesheet" href="{%static 'metadata_categorization/style.css' %}"/>
   <script type="text/javascript" charset="utf8" src="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.0/jquery.dataTables.min.js"></script>
-  <script>
-    $(document).ready(function() {
-        $("#queue").DataTable();
-    });
-  </script>
+  <script type="text/javascript" src="{%static 'metadata_categorization/metadata.js' %}"></script>
 </head>
 <body>
   <h1>Queue {{ id }} | Metadata categorization</h1>
   <table id="queue">
     <thead>
-      <tr>
-        <td>Submitted cell line</td>
-        <td>Cell line</td>
-        <td>Cell type</td>
-        <td>Anatomy</td>
-        <td>Species</td>
-        <td>Disease</td>
+      <th>Submitted cell line</th>
+      <th>Cell line</th>
+      <th>Cell type</th>
+      <th>Anatomy</th>
+      <th>Species</th>
+      <th>Disease</th>
     </thead>
     {% for summaryRecord in summaryRecords %}
     <tbody>
@@ -36,16 +31,27 @@
         <td>{{ summaryRecord.annotatedSpecies }}</td>
         <td>{{ summaryRecord.annotatedDisease }}</td>
       </tr>
-      {% for individualRecord in summaryRecord.individualRecords %}
-      <tr class="individualRecord">
-        <td>{{ individualRecord.submittedCellLine }}</td>
-        <td>{{ individualRecord.sourceCellLine }}</td>
-        <td>{{ individualRecord.sourceCellType }}</td>
-        <td>{{ individualRecord.sourceAnatomy }}</td>
-        <td>{{ individualRecord.sourceSpecies }}</td>
-        <td>{{ individualRecord.sourceDisease }}</td>
-      </tr>
-      {% endfor %}
+      {% if summaryRecord.individualRecords|length > 0 %}
+      <tr><td>
+      <table>
+        <thead>
+          <td></td>
+        </thead>
+        <tbody>
+          {% for individualRecord in summaryRecord.individualRecords %}
+            <tr class="individualRecord collapsed">
+              <td>{{ individualRecord.submittedCellLine }}</td>
+              <td>{{ individualRecord.sourceCellLine }}</td>
+              <td>{{ individualRecord.sourceCellType }}</td>
+              <td>{{ individualRecord.sourceAnatomy }}</td>
+              <td>{{ individualRecord.sourceSpecies }}</td>
+              <td>{{ individualRecord.sourceDisease }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+    </table>
+    </td></tr>
+    {% endif %}
     </tbody>
     {% endfor %}
   </table>
