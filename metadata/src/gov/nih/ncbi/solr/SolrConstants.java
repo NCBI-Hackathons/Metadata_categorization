@@ -21,6 +21,14 @@ public class SolrConstants {
 		return PREFERENCES.get("url", "http://localhost:8983/solr/annotation");
 	}
 	
+	public static void setAnnotationsDevUrl(String url) {
+		PREFERENCES.put("onotology_url", url);
+	}
+	
+	public static String getAnnotationsDevUrl() {
+		return PREFERENCES.get("ontology_url", "http://localhost:8983/solr/AnnotationsDev");
+	}
+	
 	public static void setOntologyUrl(String url) {
 		PREFERENCES.put("onotology_url", url);
 	}
@@ -35,6 +43,9 @@ public class SolrConstants {
 		}
 		else if (db.equals (SolrDatabases.Ontology)) {
 			return getOntologyUrl();
+		}
+		else if (db.equals(SolrDatabases.AnnotationsDev)) {
+			return getAnnotationsDevUrl();
 		}
 		else {
 			throw new Exception ("Please specify correct database name");

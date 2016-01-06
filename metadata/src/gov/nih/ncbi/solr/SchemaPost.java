@@ -25,7 +25,7 @@ public class SchemaPost {
 		try {
 			dbName = args[0];
 		} catch (Exception e){
-			System.out.println ("Please enter a valid database name: Annotations or Ontology");
+			System.out.println ("Please enter a valid database name: Annotations, AnnotationsDev, or Ontology");
 			Scanner scan = new Scanner (System.in);
 			dbName = scan.nextLine();
 			scan.close();			
@@ -34,11 +34,14 @@ public class SchemaPost {
 		if (dbName.equalsIgnoreCase("Annotations")) {
 			db = SolrDatabases.Annotations;
 		}
+		else if (dbName.equalsIgnoreCase ("AnnotationsDev")){
+			db = SolrDatabases.AnnotationsDev;
+		}
 		else if (dbName.equalsIgnoreCase("Ontology")){
 			db = SolrDatabases.Ontology;
 		}
 		else {
-			throw new Exception ("Please enter a valid database name. Correct names are Annotations or Ontology");
+			throw new Exception ("Please enter a valid database name. Correct names are Annotations, AnnotationsDev, or Ontology");
 		}
 		
 		HttpClient client = HttpClientBuilder.create().build();
@@ -49,7 +52,7 @@ public class SchemaPost {
 			
 			List<String> config;
 			
-			if (db.equals(SolrDatabases.Annotations)) {
+			if (db.equals(SolrDatabases.Annotations) || db.equals(SolrDatabases.AnnotationsDev)) {
 				config = RecordConfig.configList;
 			}
 			else {

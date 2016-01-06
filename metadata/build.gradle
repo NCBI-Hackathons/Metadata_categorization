@@ -12,15 +12,4 @@ apply plugin: 'eclipse'
 	   compile 'org.apache.solr:solr-solrj:5.4.0'
 	}
 	
-	task fatJar (type: Jar) {
-		manifest {
-			attributes 'Main-Class': 'gov.nih.ncbi.solr.SchemaPost'
-		}
-		baseName = project.name + 'schema-post'
-		from {
-			configurations.compile.collect {
-				it.isDirectory() ? it : zipTree(it)} }
-			}
-		with jar
-		}
-	}
+	
