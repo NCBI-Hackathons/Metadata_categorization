@@ -98,7 +98,7 @@ class QueueView(generic.TemplateView):
                 summaryRecord['recordsCount'] = len(recordsCount)
 
                 if len(summaryRecord["individualRecords"]) > 0:
-                    summaryRecord['sourceCellLine'] = cellLine
+                    summaryRecord['sourceCellLine'] = prevCellLine
 
                 summaryRecords.append(summaryRecord)
                 summaryRecord = {"individualRecords": []}
@@ -118,6 +118,8 @@ class QueueView(generic.TemplateView):
 
         context = super(QueueView, self).get_context_data()
 
+
+        # Test / mock data
         summaryRecords = [
             {
                 "sourceCellLine": "HeLa",

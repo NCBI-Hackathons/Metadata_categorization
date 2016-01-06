@@ -85,9 +85,10 @@ var iTableCounter = 1;
                   "bSort" : true, // disables sorting
                   "aoColumns": [
                     { "mDataProp": "sourceCellLine"},
+                    { "mDataProp": "annotCellLine"},
                     { "mDataProp": "sourceCellType"},
-                    { "mDataProp": "sourceCellTreatment"},
                     { "mDataProp": "sourceAnatomy"},
+                    { "mDataProp": "sourceCellTreatment"},
                     { "mDataProp": "sourceSpecies"},
                     { "mDataProp": "sourceDisease"}
     	            ],

@@ -14,7 +14,14 @@
   <script type="text/javascript" src="{%static 'metadata_categorization/metadata.js' %}"></script>
 </head>
 <body>
-  {{ solr_data }}
+  <!-- {{ solr_data }} -->
+
+  {% for summaryRecord in solr_data %}
+    {% if summaryRecord.sourceCellLine = 'SH-SY5Y/6TR(EU)/pTrex-Dest-30/MYCN' %}
+      {{ summaryRecord }}
+    {% endif %}
+  {% endfor %}
+
   <h1>Queue {{ id }} | Metadata categorization</h1>
   <table id="summaryTable">
     <thead>
@@ -34,6 +41,7 @@
         <th>Cell line</th>
         <th>Cell type</th>
         <th>Anatomy</th>
+        <th>Treatment</th>
         <th>Species</th>
         <th>Disease</th>
       </thead>
