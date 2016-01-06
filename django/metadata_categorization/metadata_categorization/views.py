@@ -10,11 +10,69 @@ from django.core.files.base import ContentFile
 from django.conf import settings
 from django.core.urlresolvers import reverse
 
+
 class IndexView(generic.TemplateView):
     template_name = 'metadata_categorization/index.html'
 
+
 class QueueView(generic.TemplateView):
     template_name = 'metadata_categorization/queue.html'
+
+    def getSummaryRecords(individualRecords):
+        """
+        Aggregates individual Biosample (SRA or GEO) records into
+        "summary records" shown as top-level table rows in the UI.  Individual
+        records are grouped into the same summary record only if they have
+        the same 'sourceCellLine' value.
+
+        Summary records have most of the same fields (columns) as
+        the individual records.  Each summary record also has a list of the
+        individual records that it contains/aggregates.
+
+        It was unclear whether/how such aggregation was possible in Solr itself,
+        so we're doing it in the web tier.
+        """
+
+        sourceFields = {
+            "sourceCellLine": "",
+            "sourceCellType": "",
+            "sourceCellTreatment": "",
+            "sourceCellAnatomy": "",
+            "sourceTreatment": "",
+            "sourceSpecies": "Homo Sapiens",
+            "sourceDisease": ""
+        }
+
+        annotatedFields = {
+            "annotatedCellLine": "",
+            "annotatedCellType": "",
+            "annotatedCellTreatment": "",
+            "annotatedCellAnatomy": "",
+            "annotatedSpecies": "",
+            "annotatedSpecies": "",
+            "annotatedDisease": ""
+        }
+
+        summaryRecords = []
+
+        summaryRecord = {"individualRecords": []}.update(sourceFields).update(annotatedFields)
+
+        for i, individualRecord in enumerate(individualRecords):
+
+            cellLine = individualRecord[i]["sourceCellLine"]
+
+            if i == 0:
+                prevCellLine = ""
+            else:
+                prevCellLine = individualRecord[-1]["sourceCellLine"]
+
+            if cellLine == prevCellLine:
+                summaryRecord["individualRecords"].push(individualRecord)
+            else:
+                summaryRecords.push(summaryRecord)
+                summaryRecord = {"individualRecords": []}.update(sourceFields).update(annotatedFields)
+
+        return summaryRecords
 
     # curationQueue
     # ID
