@@ -253,6 +253,9 @@ class QueueView(generic.TemplateView):
         summaryRecords = tmp
         '''
 
+        # Demo'd URL:
+        # http://localhost:8000/queue/6
+
         context["id"] = queueId
         context["summaryRecords"] = summaryRecords
 

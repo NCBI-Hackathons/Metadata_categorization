@@ -40,21 +40,21 @@ var iTableCounter = 1;
           "aaData": newRowData,
           "bPaginate": true,
           "aoColumns": [
-              {
-                 "mDataProp": null,
-                 "sClass": "control center",
-                 "sDefaultContent": '<img src="http://i.imgur.com/SD7Dz.png">'
-              },
-              { "mDataProp": "sourceCellLine"},
-              { "mDataProp": "sourceCellType"},
-              { "mDataProp": "sourceCellTreatment"},
-              { "mDataProp": "sourceAnatomy"},
-              { "mDataProp": "sourceSpecies"},
-              { "mDataProp": "sourceDisease"}
+            {
+               "mDataProp": null,
+               "sClass": "control center",
+               "sDefaultContent": '<img src="http://i.imgur.com/SD7Dz.png">'
+            },
+            { "mDataProp": "sourceCellLine"},
+            { "mDataProp": "sourceCellType"},
+            { "mDataProp": "sourceCellTreatment"},
+            { "mDataProp": "sourceAnatomy"},
+            { "mDataProp": "sourceSpecies"},
+            { "mDataProp": "sourceDisease"}
           ],
           "oLanguage": {
-		    "sInfo": "_TOTAL_ entries"
-		},
+    		    "sInfo": "_TOTAL_ entries"
+      		},
           "aaSorting": [[1, 'desc']]
       });
 
@@ -94,9 +94,8 @@ var iTableCounter = 1;
     	            ],
                   "bPaginate": true,
                   "oLanguage": {
-					"sInfo": "_TOTAL_ entries"
-		        }
-
+					          "sInfo": "_TOTAL_ entries"
+		              }
               });
               iTableCounter = iTableCounter + 1;
           }
