@@ -4,7 +4,21 @@ import gov.nih.ncbi.data.TsvParser;
 
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.common.SolrInputDocument;
-
+/**
+ * 
+ * @author Lena Pons
+ * NCBI Hackathon 2016 - Metadata Sorting group
+ * 
+ * reads in Ontology data from parsed from CLO into Ontology solr core
+ * 
+ * tsv file must include these fields, which correspond to fields in the solr core
+ * cellLine
+ * cellType
+ * organism
+ * tissue
+ * disease
+ *
+ */
 public class PopulateOntologyJob {
 
 	public static void main (String args[]) {

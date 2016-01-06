@@ -7,27 +7,26 @@ package gov.nih.ncbi.data;
  * data class to transfer data back and forth between BioSample and Solr
  *
  */
-//change this to Record
 public class Record {
 	
-	private int queueId;
-	private int id;
-	private String sourceCellLine; 
-	private String sampleName;
-	private String sampleTitle;
-	private String sourceCellType;
-	private String sourceSpecies;
-	private String sourceAnatomy;
+	private int queueId; 				//batch id for annotators
+	private int id; 					//BioSample Id 
+	private String sourceCellLine; 		//submitter clue for cell line 
+	private String sampleName;			//submitter provided sample name
+	private String sampleTitle;			//submitter provided sample title
+	private String sourceCellType;		//submitter provided cell type
+	private String sourceSpecies;		//submitter provided species or organism
+	private String sourceAnatomy;		//submitter provided - should be tissue or similar source
 	// blob together disease, healthState, and phenotype when read in from SRA
-	private String sourceDisease;
-	private String sourceCellTreatment;
-	private String annotCellLine; //annotated cell line
-	private String annotCellType;
+	private String sourceDisease;		//e.g. cancer
+	private String sourceCellTreatment;	//typically something about how the sample was processed
+	private String annotCellLine; 		//annotated cell line from CLO
+	private String annotCellType;		//all other annotation fields should be annotator validated from CLO controlled vocabularies
 	private String annotSpecies;
 	private String annotAnatomy;
 	private String annotDisease;
 	private String annotCellTreatment;
-	private String note;
+	private String note;				//annotator note - used for notes about cell lines that can't be determined, etc.
 	
 	public int getId() {
 		return id;
