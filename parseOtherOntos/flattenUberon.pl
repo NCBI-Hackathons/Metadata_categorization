@@ -1,7 +1,9 @@
 #!/usr/bin/perl
 
-# this script takes in an uberon.owl file (from http://berkeleybop.org/ontologies/uberon.owl)
-#   and extracts the UBERON_ID and label pairs, spitting them out to STDOUT separated by tabs
+# this script takes in an uberon.owl file (from
+#   http://berkeleybop.org/ontologies/uberon.owl) and extracts the
+#   UBERON_ID and label pairs, spitting them out to STDOUT separated
+#   by tabs
 
 $uber = '';
 
