@@ -242,10 +242,16 @@ class QueueView(generic.TemplateView):
 
         summaryRecords = self.getSummaryRecords(solr_data)
 
-        # There's a bug with the first row; hacking for demo's sake
-        #summaryRecords = summaryRecords[10:]
-
-        print(summaryRecords[30]["individualRecords"][0])
+        '''
+        # TODO
+        # There's a bug in the summary sourceCellLine
+        # Remove this hack once fixed
+        tmp = []
+        for summaryRecord in summaryRecords:
+            if summaryRecord['sourceCellLine'] != '':
+                tmp.append(summaryRecord)
+        summaryRecords = tmp
+        '''
 
         context["id"] = queueId
         context["summaryRecords"] = summaryRecords

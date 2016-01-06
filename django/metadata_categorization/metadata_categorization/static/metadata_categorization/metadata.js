@@ -55,7 +55,7 @@ var iTableCounter = 1;
           "oLanguage": {
 		    "sInfo": "_TOTAL_ entries"
 		},
-          "aaSorting": [[1, 'asc']]
+          "aaSorting": [[1, 'desc']]
       });
 
       /* Add event listener for opening and closing details

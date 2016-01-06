@@ -15,13 +15,7 @@
 </head>
 <body>
   <!-- {{ solr_data }} -->
-
-  {% for summaryRecord in solr_data %}
-    {% if summaryRecord.sourceCellLine = 'SH-SY5Y/6TR(EU)/pTrex-Dest-30/MYCN' %}
-      {{ summaryRecord }}
-    {% endif %}
-  {% endfor %}
-
+  
   <h1>Queue {{ id }} | Metadata categorization</h1>
   <table id="summaryTable">
     <thead>
