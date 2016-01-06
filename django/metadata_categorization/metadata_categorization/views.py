@@ -33,7 +33,6 @@ class QueueView(generic.TemplateView):
         so we're doing it in the web tier.
         """
 
-
         sourceFields = {
             "sourceCellLine": "",
             "sourceCellType": "",
@@ -97,6 +96,10 @@ class QueueView(generic.TemplateView):
             else:
                 recordsCount = summaryRecord["individualRecords"]
                 summaryRecord['recordsCount'] = len(recordsCount)
+
+                if len(summaryRecord["individualRecords"]) > 0:
+                    summaryRecord['sourceCellLine'] = cellLine
+
                 summaryRecords.append(summaryRecord)
                 summaryRecord = {"individualRecords": []}
                 summaryRecord.update(sourceFields)
@@ -220,14 +223,14 @@ class QueueView(generic.TemplateView):
 
         '''
         url = (solr_host + "/select?" +
-              #"q=queueId%3A5&" +
+              #"q=queueId%3A42&" +
               'queueId%3A5+AND+NOT+sourceCellLine%3A"0"&'
               #"start=0&" +
               #"rows=9999&" +
               "wt=json&" +
               "indent=true&")
         '''
-        url = 'http://localhost:8983/solr/annotation/select?q=queueId%3A5+AND+NOT+sourceCellType%3A%220%22&rows=10000&wt=json&indent=true'
+        url = 'http://localhost:8983/solr/annotation/select?q=queueId%3A5+AND+NOT+sourceCellLine%3A%220%22&rows=10000&wt=json&indent=true'
 
         request = urllib.request.Request(url)
 
@@ -240,6 +243,8 @@ class QueueView(generic.TemplateView):
         #print(solr_data)
 
         context['solr_data'] = self.getSummaryRecords(solr_data)
+
+        summaryRecords = self.getSummaryRecords(solr_data)
 
         context["id"] = 42
         context["summaryRecords"] = summaryRecords
