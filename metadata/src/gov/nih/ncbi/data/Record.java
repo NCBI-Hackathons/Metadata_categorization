@@ -12,7 +12,9 @@ public class Record {
 	
 	private int queueId;
 	private int id;
-	private String sourceCellLine; //annotated cell line
+	private String sourceCellLine; 
+	private String sampleName;
+	private String sampleTitle;
 	private String sourceCellType;
 	private String sourceSpecies;
 	private String sourceAnatomy;
@@ -116,6 +118,18 @@ public class Record {
 	}
 	public void setQueueId(int queueId) {
 		this.queueId = queueId;
+	}
+	public String getSampleName() {
+		return sampleName;
+	}
+	public void setSampleName(String sampleName) {
+		this.sampleName = sampleName;
+	}
+	public String getSampleTitle() {
+		return sampleTitle;
+	}
+	public void setSampleTitle(String sampleTitle) {
+		this.sampleTitle = sampleTitle;
 	} 
 	
 }
