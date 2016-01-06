@@ -7,47 +7,39 @@
   <link rel="stylesheet" type="text/css" href="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.0/css/jquery.dataTables_themeroller.css"/>
   <link rel="stylesheet" type="text/css" href="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.0/css/jquery.dataTables.css"/>
   <link type="text/css" rel="stylesheet" href="{%static 'metadata_categorization/style.css' %}"/>
-  <script type="text/javascript" charset="utf8" src="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.0/jquery.dataTables.min.js"></script>
+  <script type="text/javascript" charset="utf8" src="{%static 'metadata_categorization/jquery.dataTables.js' %}"></script>
   <script>
-    $(document).ready(function() {
-        $("#queue").DataTable();
-    });
+     var summaryRecords = {{ summaryRecords|safe }};
   </script>
+  <script type="text/javascript" src="{%static 'metadata_categorization/metadata.js' %}"></script>
 </head>
 <body>
   <h1>Queue {{ id }} | Metadata categorization</h1>
-  <table id="queue">
+  <table id="summaryTable">
     <thead>
-      <tr>
-        <td>Submitted cell line</td>
-        <td>Cell line</td>
-        <td>Cell type</td>
-        <td>Anatomy</td>
-        <td>Species</td>
-        <td>Disease</td>
+      <th></th>
+      <th>Submitted cell line</th>
+      <th>Cell line</th>
+      <th>Cell type</th>
+      <th>Anatomy</th>
+      <th>Species</th>
+      <th>Disease</th>
     </thead>
-    {% for summaryRecord in summaryRecords %}
-    <tbody>
-      <tr>
-        <td>{{ summaryRecord.sourceCellLine }}</td>
-        <td>{{ summaryRecord.annotatedCellLine }}</td>
-        <td>{{ summaryRecord.annotatedCellType }}</td>
-        <td>{{ summaryRecord.annotatedAnatomy }}</td>
-        <td>{{ summaryRecord.annotatedSpecies }}</td>
-        <td>{{ summaryRecord.annotatedDisease }}</td>
-      </tr>
-      {% for individualRecord in summaryRecord.individualRecords %}
-      <tr class="individualRecord">
-        <td>{{ individualRecord.submittedCellLine }}</td>
-        <td>{{ individualRecord.sourceCellLine }}</td>
-        <td>{{ individualRecord.sourceCellType }}</td>
-        <td>{{ individualRecord.sourceAnatomy }}</td>
-        <td>{{ individualRecord.sourceSpecies }}</td>
-        <td>{{ individualRecord.sourceDisease }}</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-    {% endfor %}
   </table>
+
+  <div style="display:none">
+    <table id="detailsTable">
+      <thead>
+        <th></th>
+        <th>Submitted cell line</th>
+        <th>Cell line</th>
+        <th>Cell type</th>
+        <th>Anatomy</th>
+        <th>Species</th>
+        <th>Disease</th>
+      </thead>
+    </table>
+  </div>
+
 </body>
 </html>
