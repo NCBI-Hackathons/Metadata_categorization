@@ -95,3 +95,5 @@ class QueueView(generic.TemplateView):
 
         context["id"] = 42
         context["summaryRecords"] = summaryRecords
+
+        return context
