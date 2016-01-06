@@ -1,52 +1,111 @@
 
-function toggleInnerTableRow(event, row, isToggleAll, doShow) {
-
-    var togglerCell = row.find("td:eq(0)"),
-        togglerElement = togglerCell.find(".arrow"),
-        innerList = row.next(),
-        nestedTable = innerList.find("table");
-
-    // Don't expand the table if a user clicks on a link.
-    if (typeof isToggleAll === "undefined" && event.target.tagName == "A") {
-        return;
-    }
-
-    var showOrHide;
-
-    if (typeof doShow === "undefined") {
-        var doShow = innerList.is(":visible");
-    }
-
-    if (doShow) {
-        togglerCell.attr("title", "Click to show individual records");
-        togglerElement.attr("class", "arrow closed");
-        innerList.hide();
-        showOrHide = "hide";
-    } else {
-        togglerCell.attr("title", "Click to hide individual records");
-        togglerElement.attr("class", "arrow open");
-        if (!isToggleAll) {
-            innerList.show();
-        }
-        showOrHide = "show";
-    }
-    return showOrHide;
+// See http://jsfiddle.net/rafael_cichocki/wwdg8/7/ for
+// reference for functions below
+function fnFormatDetails(table_id, html) {
+    var sOut = "<table id=\"summaryTable_" + table_id + "\">";
+    sOut += html;
+    sOut += "</table>";
+    return sOut;
 }
 
+var newRowData = summaryRecords;
 
-// Expands and contracts inner table upon clicking a row
-$(document).on("click", "tr.expandable", function(event) {
+var iTableCounter = 1;
+  var oTable;
+  var oInnerTable;
+  var detailsTableHtml;
 
-    // Don't expand the table if a user clicks on a link.
-    if (event.target.tagName == "A") {
-        return;
-    }
+  $(document).ready(function () {
 
-    var row = $(this);
-    toggleInnerTableRow(event, row);
+      detailsTableHtml = $("#detailsTable").html();
 
-});
+      //Insert a 'details' column to the table
+      var nCloneTh = document.createElement('th');
+      var nCloneTd = document.createElement('td');
+      nCloneTd.innerHTML = '<img src="http://i.imgur.com/SD7Dz.png">';
+      nCloneTd.className = "center";
+
+      $('#summaryTable thead tr').each(function () {
+          this.insertBefore(nCloneTh, this.childNodes[0]);
+      });
+
+      $('#summaryTable tbody tr').each(function () {
+          this.insertBefore(nCloneTd.cloneNode(true), this.childNodes[0]);
+      });
+
+
+      //Initialse DataTables, with no sorting on the 'details' column
+      var oTable = $('#summaryTable').dataTable({
+          "bJQueryUI": true,
+          "aaData": newRowData,
+          "bPaginate": true,
+          "aoColumns": [
+              {
+                 "mDataProp": null,
+                 "sClass": "control center",
+                 "sDefaultContent": '<img src="http://i.imgur.com/SD7Dz.png">'
+              },
+              { "mDataProp": "sourceCellLine"},
+              { "mDataProp": "sourceCellType"},
+              { "mDataProp": "sourceCellTreatment"},
+              { "mDataProp": "sourceCellAnatomy"},
+              { "mDataProp": "sourceSpecies"},
+              { "mDataProp": "sourceSpecies"},
+              { "mDataProp": "sourceDisease"}
+          ],
+          "oLanguage": {
+		    "sInfo": "_TOTAL_ entries"
+		},
+          "aaSorting": [[1, 'asc']]
+      });
+
+      /* Add event listener for opening and closing details
+      * Note that the indicator for showing which row is open is not controlled by DataTables,
+      * rather it is done here
+      */
+      $('#summaryTable tbody td img').live('click', function () {
+          var nTr = $(this).parents('tr')[0];
+          var nTds = this;
+
+          if (oTable.fnIsOpen(nTr)) {
+              /* This row is already open - close it */
+              this.src = "http://i.imgur.com/SD7Dz.png";
+              oTable.fnClose(nTr);
+          }
+          else {
+              /* Open this row */
+              var rowIndex = oTable.fnGetPosition( $(nTds).closest('tr')[0] );
+              var detailsRowData = newRowData[rowIndex].individualRecords;
+
+              this.src = "http://i.imgur.com/d4ICC.png";
+              oTable.fnOpen(nTr, fnFormatDetails(iTableCounter, detailsTableHtml), 'details');
+              oInnerTable = $("#summaryTable_" + iTableCounter).dataTable({
+                  "bJQueryUI": true,
+                  "bFilter": false,
+                  "aaData": detailsRowData,
+                  "bSort" : true, // disables sorting
+                  "aoColumns": [
+                    { "mDataProp": "sourceCellLine"},
+                    { "mDataProp": "sourceCellType"},
+                    { "mDataProp": "sourceCellTreatment"},
+                    { "mDataProp": "sourceCellAnatomy"},
+                    { "mDataProp": "sourceSpecies"},
+                    { "mDataProp": "sourceSpecies"},
+                    { "mDataProp": "sourceDisease"}
+    	            ],
+                  "bPaginate": true,
+                  "oLanguage": {
+					"sInfo": "_TOTAL_ entries"
+		        }
+
+              });
+              iTableCounter = iTableCounter + 1;
+          }
+      });
+
+
+  });
 
 $(document).ready(function() {
-  //$("#queue").DataTable();
+  $("#queue").DataTable();
 });
