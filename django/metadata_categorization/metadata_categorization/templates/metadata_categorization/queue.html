@@ -3,44 +3,17 @@
 <html>
 <head>
   <title>Queue {{ id }} | Metadata categorization</title>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
-  <link rel="stylesheet" type="text/css" href="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.0/css/jquery.dataTables_themeroller.css"/>
-  <link rel="stylesheet" type="text/css" href="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.0/css/jquery.dataTables.css"/>
   <link type="text/css" rel="stylesheet" href="{%static 'metadata_categorization/style.css' %}"/>
-  <script type="text/javascript" charset="utf8" src="{%static 'metadata_categorization/jquery.dataTables.js' %}"></script>
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/handsontable/0.20.3/handsontable.full.css"/>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/handsontable/0.20.3/handsontable.full.js"></script>
+  <script type="text/javascript" src="{%static 'metadata_categorization/metadata.js' %}"></script>
   <script>
      var summaryRecords = {{ summaryRecords|safe }};
   </script>
-  <script type="text/javascript" src="{%static 'metadata_categorization/metadata.js' %}"></script>
 </head>
 <body>
-  <!-- {{ solr_data }} -->
-  
   <h1>Queue {{ id }} | Metadata categorization</h1>
-  <table id="summaryTable">
-    <thead>
-      <th>Submitted cell line</th>
-      <th>Cell line</th>
-      <th>Cell type</th>
-      <th>Anatomy</th>
-      <th>Species</th>
-      <th>Disease</th>
-    </thead>
-  </table>
-
-  <div style="display:none">
-    <table id="detailsTable">
-      <thead>
-        <th>Submitted cell line</th>
-        <th>Cell line</th>
-        <th>Cell type</th>
-        <th>Anatomy</th>
-        <th>Treatment</th>
-        <th>Species</th>
-        <th>Disease</th>
-      </thead>
-    </table>
-  </div>
-
+  <div id="queue" class="handsontable"></div>
 </body>
 </html>
