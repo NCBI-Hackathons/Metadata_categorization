@@ -17,18 +17,20 @@ $(document).ready(function() {
   var hot = new Handsontable(container, {
     data: summaryRecords,
     height: 396,
-    rowHeaders: true,
     stretchH: 'all',
     sortIndicator: true,
     columnSorting: true,
     contextMenu: true,
-    colWidths: [8, , , , , ,],
+    colWidths: [7, , , , , ,],
     colHeaders: [
       "", "Submitted cell line", "Cell line", "Cell type", "Anatomy",
       "Species", "Disease"
     ],
     columns: [
-      {data: "", renderer: plusRenderer},
+      {
+        data: "", disableVisualSelection: true, editor: false,
+        renderer: plusRenderer
+      },
       {data: "sourceCellLine"},
       {data: "annotCellLine"},
       {data: "sourceCellType"},

@@ -5,6 +5,7 @@ body {
 .icon {
     display: inline-block;
     vertical-align: middle;
+		cursor: pointer;
 }
 
 .icon--plus path {
