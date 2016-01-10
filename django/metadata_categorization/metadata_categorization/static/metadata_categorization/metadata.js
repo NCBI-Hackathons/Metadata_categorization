@@ -22,6 +22,7 @@ $(document).ready(function() {
     sortIndicator: true,
     columnSorting: true,
     contextMenu: true,
+    colWidths: [8, , , , , ,],
     colHeaders: [
       "", "Submitted cell line", "Cell line", "Cell type", "Anatomy",
       "Species", "Disease"
