@@ -18,7 +18,7 @@ close $FH;
 
 while (<>) {
     for $key (@keys) {
-	$_ =~ s/$key/$tr{$key}/;
+	$_ =~ s/\s+$key\s+/\t$tr{$key}\t/;
     }
     print $_;
 }

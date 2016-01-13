@@ -11,7 +11,7 @@ use XML::LibXML;
 use XML::LibXML::Iterator;
 use Try::Tiny;
 
-$header = "CLO_ID\tLabel\tSynonyms\tCell_Type\tDisease\tNCBI_Taxon\tUberon\tSnome\n";
+$header = "CLO_ID\tLabel\tSynonyms\tCell_Type\tDisease_comment\tDOID\tNCBI_Taxon\tUberon\tSnome\n";
 print $header;
 
 $counter = 0;
@@ -63,6 +63,7 @@ while (<>) {
 	    $label = '.';
 	    $synonyms = '"';
 	    $comment_disease = '.';
+	    $doid = '.';
 	    $cell_line = '.';
 	    $ncbi_taxon = '.';
 	    $uberon = '.';
@@ -77,6 +78,7 @@ while (<>) {
 		elsif ($wholeStr =~ /^\s*<rdfs:seeAlso[^>]*>[^:<]+:\s+([^<]+)<\/rdfs:seeAlso>\s*$/) { $synonyms .= "$1;"; }
 		elsif ($wholeStr =~ /^\s*<owl:Class\s*rdf:about="[^>]*(CLO_\d+)">/) { $clo_id = $1; }
 		elsif ($wholeStr =~ /^\s*<rdfs:comment[^>]*>disease:\s*([^<]+)<\/rdfs:comment>\s*$/) { $comment_disease = $1; }
+		elsif ($wholeStr =~ /^\s*<owl:someValuesFrom\s+rdf:resource="[^"]*(DOID_\d+)"\/>\s*$/) { $doid = $1; }
 		elsif ($wholeStr =~ /^\s*<owl:someValuesFrom\s+rdf:resource="[^>]*(NCBITaxon_\d+)"\/>\s*$/) { $ncbi_taxon = $1; }
 		elsif ($wholeStr =~ /^\s*<rdf:Description rdf:about="[^>]*(CL_\d+)"\/>\s*$/) { $cell_line = $1; }
 		elsif ($wholeStr =~ /^\s*<rdfs:label(?:\s+[^>]+=[^>]*)?>([^<]*)<\/rdfs:label>\s*$/) { $label = $1; }
@@ -93,8 +95,8 @@ while (<>) {
 
 	    # output this record if it has a CLO_ID
 	    unless ($clo_id eq '.') {
-		$outputStr = sprintf("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n",
-				     $clo_id, $label, $synonyms, $cell_line, $comment_disease, $ncbi_taxon, $uberon, $snomedct);
+		$outputStr = sprintf("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n",
+				     $clo_id, $label, $synonyms, $cell_line, $comment_disease, $doid, $ncbi_taxon, $uberon, $snomedct);
 	    
 		print $outputStr;
 	    }
