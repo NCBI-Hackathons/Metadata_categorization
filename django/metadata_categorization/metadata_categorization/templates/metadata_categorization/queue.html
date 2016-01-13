@@ -14,11 +14,11 @@
   <script type="text/javascript" src="{%static 'metadata_categorization/metadata.js' %}"></script>
 </head>
 <body>
+  <!-- {{ solr_data }} -->
+  
   <h1>Queue {{ id }} | Metadata categorization</h1>
-  {{ solr_data }}
   <table id="summaryTable">
     <thead>
-      <th></th>
       <th>Submitted cell line</th>
       <th>Cell line</th>
       <th>Cell type</th>
@@ -31,11 +31,11 @@
   <div style="display:none">
     <table id="detailsTable">
       <thead>
-        <th></th>
         <th>Submitted cell line</th>
         <th>Cell line</th>
         <th>Cell type</th>
         <th>Anatomy</th>
+        <th>Treatment</th>
         <th>Species</th>
         <th>Disease</th>
       </thead>

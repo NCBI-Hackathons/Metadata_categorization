@@ -40,23 +40,22 @@ var iTableCounter = 1;
           "aaData": newRowData,
           "bPaginate": true,
           "aoColumns": [
-              {
-                 "mDataProp": null,
-                 "sClass": "control center",
-                 "sDefaultContent": '<img src="http://i.imgur.com/SD7Dz.png">'
-              },
-              { "mDataProp": "sourceCellLine"},
-              { "mDataProp": "sourceCellType"},
-              { "mDataProp": "sourceCellTreatment"},
-              { "mDataProp": "sourceCellAnatomy"},
-              { "mDataProp": "sourceSpecies"},
-              { "mDataProp": "sourceSpecies"},
-              { "mDataProp": "sourceDisease"}
+            {
+               "mDataProp": null,
+               "sClass": "control center",
+               "sDefaultContent": '<img src="http://i.imgur.com/SD7Dz.png">'
+            },
+            { "mDataProp": "sourceCellLine"},
+            { "mDataProp": "sourceCellType"},
+            { "mDataProp": "sourceCellTreatment"},
+            { "mDataProp": "sourceAnatomy"},
+            { "mDataProp": "sourceSpecies"},
+            { "mDataProp": "sourceDisease"}
           ],
           "oLanguage": {
-		    "sInfo": "_TOTAL_ entries"
-		},
-          "aaSorting": [[1, 'asc']]
+    		    "sInfo": "_TOTAL_ entries"
+      		},
+          "aaSorting": [[1, 'desc']]
       });
 
       /* Add event listener for opening and closing details
@@ -86,18 +85,17 @@ var iTableCounter = 1;
                   "bSort" : true, // disables sorting
                   "aoColumns": [
                     { "mDataProp": "sourceCellLine"},
+                    { "mDataProp": "annotCellLine"},
                     { "mDataProp": "sourceCellType"},
+                    { "mDataProp": "sourceAnatomy"},
                     { "mDataProp": "sourceCellTreatment"},
-                    { "mDataProp": "sourceCellAnatomy"},
-                    { "mDataProp": "sourceSpecies"},
                     { "mDataProp": "sourceSpecies"},
                     { "mDataProp": "sourceDisease"}
     	            ],
                   "bPaginate": true,
                   "oLanguage": {
-					"sInfo": "_TOTAL_ entries"
-		        }
-
+					          "sInfo": "_TOTAL_ entries"
+		              }
               });
               iTableCounter = iTableCounter + 1;
           }
