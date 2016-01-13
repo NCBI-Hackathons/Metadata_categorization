@@ -3,9 +3,11 @@
 <html>
 <head>
   <title>Queue {{ id }} | Metadata categorization</title>
-  <link type="text/css" rel="stylesheet" href="{%static 'metadata_categorization/style.css' %}"/>
+  <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
   <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/handsontable/0.20.3/handsontable.full.css"/>
+  <link type="text/css" rel="stylesheet" href="{%static 'metadata_categorization/style.css' %}"/>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/handsontable/0.20.3/handsontable.full.js"></script>
   <script type="text/javascript" src="{%static 'metadata_categorization/metadata.js' %}"></script>
   <script>
@@ -15,5 +17,6 @@
 <body>
   <h1>Queue {{ id }} | Metadata categorization</h1>
   <div id="queue" class="handsontable"></div>
+  <div id="irContainer" class="handsontable"></div>
 </body>
 </html>

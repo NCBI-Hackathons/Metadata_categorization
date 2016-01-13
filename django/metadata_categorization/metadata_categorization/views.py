@@ -101,7 +101,7 @@ class QueueView(generic.TemplateView):
                     summaryRecord['sourceCellLine'] = prevCellLine
 
                 summaryRecords.append(summaryRecord)
-                summaryRecord = {"individualRecords": []}
+                summaryRecord = {"individualRecords": [], "index": i}
                 summaryRecord.update(sourceFields)
                 summaryRecord.update(annotFields)
 
