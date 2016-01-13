@@ -70,7 +70,7 @@ $(document).ready(function() {
     contextMenu: true,
     colWidths: [7, 10, , , , , ,],
     colHeaders: [
-      "", "", "Source cell line", "Cell line", "Cell type", "Anatomy",
+      "", "#", "Source cell line", "Cell line", "Cell type", "Anatomy",
       "Species", "Disease"
     ],
     columns: [
