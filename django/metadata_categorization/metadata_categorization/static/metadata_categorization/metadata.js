@@ -1,11 +1,27 @@
-function plusRenderer (instance, td, row, col, prop, value, cellProperties) {
+function renderBiosampleId(instance, td, row, col, prop, value, cellProperties) {
+  // Converts "id" to BioSample accession, and hyperlinks it
+  // BioSample accessions have the form "SAMN", plus 8 digits,
+  // E.g. id 2730062 -> SAMN02730062
+  var id = "" + value, // cast int to string
+      leadingZeros = Array(8 - id.length + 1).join("0"),
+      biosampleAcc = "SAMN" + leadingZeros + value;
+
+  var href = "https://www.ncbi.nlm.nih.gov/biosample/" + biosampleAcc,
+      title = "View full BioSample record"
+      link = '<a href="' + href + '" target="blank" title="' + title + '">' +
+        biosampleAcc + '</a>';
+
+  $(td).html(link);
+}
+
+function renderPlus (instance, td, row, col, prop, value, cellProperties) {
 
   var plusIcon =
     '<svg class="icon icon--plus" viewBox="0 0 5 5" height="20px" width="20px">' +
       '<path d="M2 1 h1 v1 h1 v1 h-1 v1 h-1 v-1 h-1 v-1 h1 z" />' +
     '</svg>';
 
-  $(td).empty().append(plusIcon);
+  $(td).html(plusIcon);
 }
 
 var plusEditor = Handsontable.editors.BaseEditor.prototype.extend();
@@ -31,11 +47,11 @@ plusEditor.prototype.prepare = function(row, col, prop, td, originalValue, cellP
     contextMenu: true,
     colWidths: [, , , , , , ],
     colHeaders: [
-      "ID", "Source cell line", "Cell line", "Cell type", "Anatomy",
+      "BioSample ID", "Source cell line", "Cell line", "Cell type", "Anatomy",
       "Species", "Disease"
     ],
     columns: [
-      {data: "id", readOnly: true},
+      {data: "id", readOnly: true, renderer: renderBiosampleId},
       {data: "sourceCellLine"},
       {data: "annotCellLine"},
       {data: "sourceCellType"},
@@ -48,7 +64,7 @@ plusEditor.prototype.prepare = function(row, col, prop, td, originalValue, cellP
   $("#irDialog").dialog({
     title: 'Edit individual records',
     height: 400,
-    width: 900,
+    width: 950,
     create: function( event, ui ) {
 
       // Fix minor UI artifacts
@@ -77,7 +93,7 @@ $(document).ready(function() {
     columns: [
       {
         data: "", disableVisualSelection: true, editor: plusEditor,
-        renderer: plusRenderer,
+        renderer: renderPlus,
       },
       {data: "recordsCount", readOnly: true},
       {data: "sourceCellLine"},
