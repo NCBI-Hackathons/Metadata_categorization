@@ -29,12 +29,13 @@ plusEditor.prototype.prepare = function(row, col, prop, td, originalValue, cellP
     sortIndicator: true,
     columnSorting: true,
     contextMenu: true,
-    colWidths: [ , , , , , ],
+    colWidths: [, , , , , , ],
     colHeaders: [
-      "Source cell line", "Cell line", "Cell type", "Anatomy","Species",
-      "Disease"
+      "ID", "Source cell line", "Cell line", "Cell type", "Anatomy",
+      "Species", "Disease"
     ],
     columns: [
+      {data: "id", readOnly: true},
       {data: "sourceCellLine"},
       {data: "annotCellLine"},
       {data: "sourceCellType"},
@@ -47,7 +48,7 @@ plusEditor.prototype.prepare = function(row, col, prop, td, originalValue, cellP
   $("#irDialog").dialog({
     title: 'Edit individual records',
     height: 400,
-    width: 800,
+    width: 900,
     create: function( event, ui ) {
 
       // Fix minor UI artifacts
@@ -78,7 +79,7 @@ $(document).ready(function() {
         data: "", disableVisualSelection: true, editor: plusEditor,
         renderer: plusRenderer,
       },
-      {data: "recordsCount", disableVisualSelection: true},
+      {data: "recordsCount", readOnly: true},
       {data: "sourceCellLine"},
       {data: "annotCellLine"},
       {data: "sourceCellType"},
