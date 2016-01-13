@@ -11,7 +11,7 @@ use XML::LibXML;
 use XML::LibXML::Iterator;
 use Try::Tiny;
 
-$header = "CLO_ID\tLabel\tSynonyms\tCell_Line\tDisease\tNCBI_Taxon\tUberon\tSnome\n";
+$header = "CLO_ID\tLabel\tSynonyms\tCell_Type\tDisease\tNCBI_Taxon\tUberon\tSnome\n";
 print $header;
 
 $counter = 0;
