@@ -10,6 +10,7 @@ package gov.nih.ncbi.data;
 
 public class OntologyEntry {
 	
+	private String cloId;
 	private String cellLine; //CLOID - clo label
 	private String cellType; //??
 	private String organism; //taxonomy label
@@ -45,6 +46,12 @@ public class OntologyEntry {
 	}
 	public void setDisease(String disease) {
 		this.disease = disease;
+	}
+	public String getCloId() {
+		return cloId;
+	}
+	public void setCloId(String cloId) {
+		this.cloId = cloId;
 	}
 	
 	

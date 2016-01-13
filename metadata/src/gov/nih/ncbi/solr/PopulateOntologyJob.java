@@ -12,11 +12,13 @@ import org.apache.solr.common.SolrInputDocument;
  * reads in Ontology data from parsed from CLO into Ontology solr core
  * 
  * tsv file must include these fields, which correspond to fields in the solr core
- * cellLine
- * cellType
- * organism
- * tissue
- * disease
+ * 
+ * cloId - CLO_ID
+ * cellLine - Label
+ * cellType - Cell_Type
+ * organism - NCBI_Taxon
+ * tissue - Uberon OR Snome
+ * disease - Disease_comment OR DOID
  *
  */
 public class PopulateOntologyJob {
@@ -30,34 +32,45 @@ public class PopulateOntologyJob {
 			parser.readHeaders();
 			while (parser.readRecord()) {
 				SolrInputDocument doc = new SolrInputDocument();
-				if (!parser.get("cellLine").equals(".")){
-					doc.addField("cellLine", parser.get("cellLine"));
+				if(!parser.get("CLO_ID").equals(".")) {
+					doc.addField("cloId", parser.get("CLO_ID"));
 				}
-				else{
+				if (!parser.get("Label").equals(".")) {
+					doc.addField("cellLine", parser.get("Label"));
+				}
+				else {
 					doc.addField("cellLine", "0");
 				}
-				if (!parser.get("cellType").equals(".")){
-					doc.addField("cellType", parser.get("cellType"));
+				if (!parser.get("Cell_Type").equals(".")) {
+					doc.addField("cellType", parser.get("Cell_Type"));
 				}
-				else{
+				else { 
 					doc.addField("cellType", "0");
 				}
-				if (!parser.get("organism").equals(".")){
-					doc.addField("organism", parser.get("organism"));
+				if (!parser.get("NCBI_Taxon").equals(".")) {
+					doc.addField("organism", parser.get("NCBI_Taxon"));
 				}
-				else{
+				else {
 					doc.addField("organism", "0");
 				}
-				if (!parser.get("tissue").equals(".")){
-					doc.addField("tissue", parser.get("tissue"));
+				//tissue is constructed from two candidate fields "Uberon" or "Snome"
+				if (!parser.get("Uberon").equals(".")) {
+					doc.addField("tissue", parser.get("Uberon"));
 				}
-				else{
+				else if (!parser.get("Snome").equals(".")) {
+					doc.addField("tissue", parser.get("Snome"));
+				}
+				else {
 					doc.addField("tissue", "0");
 				}
-				if (!parser.get("disease").equals(".")){
-					doc.addField("disease", parser.get("disease"));
+				//disease is constructed from two fields "Disease_comment" and "DOID"
+				if (!parser.get("Disease_comment").equals(".")) {
+					doc.addField("disease", parser.get("Disease_comment"));
 				}
-				else{
+				else if (! parser.get("DOID").equals(".")) {
+					doc.addField("disease", parser.get("DOID"));
+				}
+				else {
 					doc.addField("disease", "0");
 				}
 				try {
