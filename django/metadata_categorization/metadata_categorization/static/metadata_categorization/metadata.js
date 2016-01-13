@@ -15,8 +15,8 @@ plusEditor.prototype.prepare = function(row, col, prop, td, originalValue, cellP
   //Invoke the original method
   Handsontable.editors.BaseEditor.prototype.prepare.apply(this, arguments);
 
-  var srIndex = cellProperties.physicalRow,
-      rowIndex = cellProperties.row,
+  var rowIndex = cellProperties.physicalRow, // current row index (perhaps after custom sorting)
+      srIndex = cellProperties.row, // original summary record index
       summaryRecord = summaryRecords[srIndex],
       individualRecords = summaryRecord["individualRecords"],
       sourceCellLine = summaryRecord["sourceCellLine"],
