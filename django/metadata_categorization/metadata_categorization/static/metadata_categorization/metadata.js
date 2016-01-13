@@ -68,9 +68,9 @@ $(document).ready(function() {
     sortIndicator: true,
     columnSorting: true,
     contextMenu: true,
-    colWidths: [7, , , , , ,],
+    colWidths: [7, 10, , , , , ,],
     colHeaders: [
-      "", "Source cell line", "Cell line", "Cell type", "Anatomy",
+      "", "", "Source cell line", "Cell line", "Cell type", "Anatomy",
       "Species", "Disease"
     ],
     columns: [
@@ -78,6 +78,7 @@ $(document).ready(function() {
         data: "", disableVisualSelection: true, editor: plusEditor,
         renderer: plusRenderer,
       },
+      {data: "recordsCount", disableVisualSelection: true},
       {data: "sourceCellLine"},
       {data: "annotCellLine"},
       {data: "sourceCellType"},
