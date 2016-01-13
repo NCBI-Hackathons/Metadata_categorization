@@ -15,24 +15,23 @@ plusEditor.prototype.prepare = function(row, col, prop, td, originalValue, cellP
   //Invoke the original method
   Handsontable.editors.BaseEditor.prototype.prepare.apply(this, arguments);
 
-
   var srIndex = cellProperties.physicalRow,
       rowIndex = cellProperties.row,
       summaryRecord = summaryRecords[srIndex],
       individualRecords = summaryRecord["individualRecords"],
       sourceCellLine = summaryRecord["sourceCellLine"],
-      irContainer = $( "#irContainer" );
+      irContainer = document.getElementById("irContainer");
 
-  var irQueue = new Handsontable(document.getElementById("irContainer"), {
+  var irQueue = new Handsontable(irContainer, {
     data: individualRecords,
-    height: 396,
+    height: 300,
     stretchH: 'all',
     sortIndicator: true,
     columnSorting: true,
     contextMenu: true,
     colWidths: [ , , , , , ],
     colHeaders: [
-      "Submitted cell line", "Cell line", "Cell type", "Anatomy","Species",
+      "Source cell line", "Cell line", "Cell type", "Anatomy","Species",
       "Disease"
     ],
     columns: [
@@ -45,10 +44,16 @@ plusEditor.prototype.prepare = function(row, col, prop, td, originalValue, cellP
     ]
   })
 
-  irContainer.dialog({
-    title: 'Individual records with source cell line "' + sourceCellLine + '"'
-  });
+  $("#irDialog").dialog({
+    title: 'Edit individual records',
+    height: 400,
+    width: 800,
+    create: function( event, ui ) {
 
+      // Fix minor UI artifacts
+      $(".ui-dialog-titlebar-close .ui-button-text").remove();
+    }
+  });
 
 };
 
@@ -65,7 +70,7 @@ $(document).ready(function() {
     contextMenu: true,
     colWidths: [7, , , , , ,],
     colHeaders: [
-      "", "Submitted cell line", "Cell line", "Cell type", "Anatomy",
+      "", "Source cell line", "Cell line", "Cell type", "Anatomy",
       "Species", "Disease"
     ],
     columns: [
