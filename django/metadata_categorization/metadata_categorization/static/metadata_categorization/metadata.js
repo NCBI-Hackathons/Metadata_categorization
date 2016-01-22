@@ -1,10 +1,27 @@
-function renderBiosampleId(instance, td, row, col, prop, value, cellProperties) {
-  // Converts "id" to BioSample accession, and hyperlinks it
-  // BioSample accessions have the form "SAMN", plus 8 digits,
-  // E.g. id 2730062 -> SAMN02730062
-  var id = "" + value, // cast int to string
+
+function biosampleAccToId(biosampleAcc) {
+  // Converts BioSample accession to individual record ID
+  // BioSample accessions have the form "SAMN" + 8 digits
+  // E.g. SAMN02730062 -> 2730062
+  var id = biosampleAcc.split(/SAMN[0]+/)[1];
+
+  return id;
+}
+
+function idToBiosampleAcc(id) {
+  // Converts individual record ID to BioSample accession
+  // BioSample accessions have the form "SAMN" + 8 digits
+  // E.g. 2730062 -> SAMN02730062
+  var id = "" + id, // cast int to string
       leadingZeros = Array(8 - id.length + 1).join("0"),
-      biosampleAcc = "SAMN" + leadingZeros + value;
+      biosampleAcc = "SAMN" + leadingZeros + id;
+
+  return biosampleAcc;
+}
+
+function renderBiosampleId(instance, td, row, col, prop, value, cellProperties) {
+
+  var biosampleAcc = idToBiosampleAcc(value);
 
   var href = "https://www.ncbi.nlm.nih.gov/biosample/" + biosampleAcc,
       title = "View full BioSample record"
@@ -58,7 +75,38 @@ plusEditor.prototype.prepare = function(row, col, prop, td, originalValue, cellP
       {data: "sourceCellAnatomy"},
       {data: "sourceSpecies"},
       {data: "sourceDisease"}
-    ]
+    ],
+    afterChange: function (change, source) {
+      if (source === 'loadData') {
+        return; //don't save this change
+      }
+
+      var irIndex = change[0][0], // e.g. 0
+          column = change[0][1], // e.g. annotCellLine
+          oldValue = change[0][2], // e.g. null
+          newValue = change[0][3], // e.g. HeLa
+          data = this.getDataAtRow(irIndex),
+          id = data[0];
+
+      var updatedIR = {
+        'id': id,
+        'sourceCellLine': data[1],
+        'annotCellLine': data[2],
+        'sourceCellType': data[3],
+        'sourceCellAnatomy': data[4],
+        'sourceSpecies': data[5],
+        'sourceDisease': data[6]
+      };
+
+      summaryRecords[srIndex][irIndex] = updatedIR;
+
+      $.ajax({
+        'url': '/record/' + id,
+        'method': 'POST',
+        'data': updatedIR
+      });
+
+    }
   })
 
   $("#irDialog").dialog({
@@ -66,7 +114,6 @@ plusEditor.prototype.prepare = function(row, col, prop, td, originalValue, cellP
     height: 400,
     width: 950,
     create: function( event, ui ) {
-
       // Fix minor UI artifacts
       $(".ui-dialog-titlebar-close .ui-button-text").remove();
     }
