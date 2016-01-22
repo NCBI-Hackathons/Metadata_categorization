@@ -1,3 +1,15 @@
+function csrfSafeMethod(method) {
+    // these HTTP methods do not require CSRF protection
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+}
+$.ajaxSetup({
+    beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+            var csrftoken = Cookies.get('csrftoken');
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        }
+    }
+});
 
 function biosampleAccToId(biosampleAcc) {
   // Converts BioSample accession to individual record ID
@@ -88,22 +100,22 @@ plusEditor.prototype.prepare = function(row, col, prop, td, originalValue, cellP
           data = this.getDataAtRow(irIndex),
           id = data[0];
 
-      var updatedIR = {
+      var editedIndividualRecord = {
         'id': id,
-        'sourceCellLine': data[1],
+        //'sourceCellLine': data[1],
         'annotCellLine': data[2],
-        'sourceCellType': data[3],
-        'sourceCellAnatomy': data[4],
-        'sourceSpecies': data[5],
-        'sourceDisease': data[6]
+        'annotCellType': data[3],
+        'annotCellAnatomy': data[4],
+        'annotSpecies': data[5],
+        'annotDisease': data[6]
       };
 
-      summaryRecords[srIndex][irIndex] = updatedIR;
+      summaryRecords[srIndex][irIndex] = editedIndividualRecord;
 
       $.ajax({
         'url': '/record/' + id,
         'method': 'POST',
-        'data': updatedIR
+        'data': editedIndividualRecord
       });
 
     }
