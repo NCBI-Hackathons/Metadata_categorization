@@ -83,10 +83,10 @@ plusEditor.prototype.prepare = function(row, col, prop, td, originalValue, cellP
       {data: "id", readOnly: true, renderer: renderBiosampleId},
       {data: "sourceCellLine"},
       {data: "annotCellLine"},
-      {data: "sourceCellType"},
-      {data: "sourceCellAnatomy"},
-      {data: "sourceSpecies"},
-      {data: "sourceDisease"}
+      {data: "annotCellType"},
+      {data: "annotCellAnatomy"},
+      {data: "annotSpecies"},
+      {data: "annotDisease"}
     ],
     afterChange: function (change, source) {
       if (source === 'loadData') {
@@ -121,13 +121,16 @@ plusEditor.prototype.prepare = function(row, col, prop, td, originalValue, cellP
     }
   })
 
-  $("#irDialog").dialog({
+  $('#irDialog').dialog({
     title: 'Edit individual records',
     height: 400,
     width: 950,
-    create: function( event, ui ) {
+    create: function(event, ui) {
       // Fix minor UI artifacts
-      $(".ui-dialog-titlebar-close .ui-button-text").remove();
+      $('.ui-dialog-titlebar-close .ui-button-text').remove();
+    },
+    close: function(event, ui) {
+      irQueue.destroy();
     }
   });
 
