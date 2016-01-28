@@ -56,8 +56,6 @@ class QueueView(generic.TemplateView):
         summaryRecord.update(sourceFields)
         summaryRecord.update(annotFields)
 
-        #print(len(individualRecords))
-
         tmpIRs = []
         for i, individualRecord in enumerate(individualRecords):
             tmpIR = {}
@@ -74,8 +72,6 @@ class QueueView(generic.TemplateView):
 
         individualRecords = tmpIRs
 
-        #print(individualRecords)
-
         for i, individualRecord in enumerate(individualRecords):
             if "sourceCellLine" not in individualRecord:
                 print('"sourceCellLine" not in individualRecord')
@@ -83,12 +79,9 @@ class QueueView(generic.TemplateView):
 
             cellLine = individualRecords[i]["sourceCellLine"]
 
-            if i == 0:
-                prevCellLine = ""
-            else:
-                prevCellLine = individualRecords[i-1]["sourceCellLine"]
+            prevCellLine = individualRecords[i-1]["sourceCellLine"]
 
-            if cellLine == prevCellLine:
+            if cellLine == prevCellLine or i == 0:
                 summaryRecord["individualRecords"].append(individualRecord)
             else:
                 recordsCount = summaryRecord["individualRecords"]
@@ -98,7 +91,10 @@ class QueueView(generic.TemplateView):
                     summaryRecord['sourceCellLine'] = prevCellLine
 
                 summaryRecords.append(summaryRecord)
-                summaryRecord = {"individualRecords": [], "index": i}
+                summaryRecord = {
+                    "individualRecords": [individualRecord],
+                    "index": i
+                }
                 summaryRecord.update(sourceFields)
                 summaryRecord.update(annotFields)
 
