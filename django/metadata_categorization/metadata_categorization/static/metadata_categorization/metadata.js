@@ -84,7 +84,7 @@ plusEditor.prototype.prepare = function(row, col, prop, td, originalValue, cellP
       {data: "sourceCellLine"},
       {data: "annotCellLine"},
       {data: "annotCellType"},
-      {data: "annotCellAnatomy"},
+      {data: "annotAnatomy"},
       {data: "annotSpecies"},
       {data: "annotDisease"}
     ],
@@ -105,7 +105,7 @@ plusEditor.prototype.prepare = function(row, col, prop, td, originalValue, cellP
         //'sourceCellLine': data[1],
         'annotCellLine': data[2],
         'annotCellType': data[3],
-        'annotCellAnatomy': data[4],
+        'annotAnatomy': data[4],
         'annotSpecies': data[5],
         'annotDisease': data[6]
       };

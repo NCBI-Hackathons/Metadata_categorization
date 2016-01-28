@@ -166,7 +166,45 @@ class QueueView(generic.TemplateView):
 
 class RecordView(generic.TemplateView):
 
+    def transform_record(self, id, data):
+        # Transforms data to record format used by this app's Solr core
+        record = {
+            'annotCellLine': data.get('annotCellLine'),
+            'annotCellType': data.get('annotCellType'),
+            'annotAnatomy': data.get('annotAnatomy'),
+            'annotSpecies': data.get('annotSpecies'),
+            'annotDisease': data.get('annotDisease')
+        }
+
+        nr = {'id': id} # new record
+        for key in record:
+            value = record[key]
+            if value == '':
+                # We store empty strings as "0" in Solr.  I forget exactly why.
+                # TODO: Investigate why.  If needed, document, else refactor.
+                nr[key] = {'set': '0'}
+            else:
+                nr[key] = {'set': value}
+
+        return [nr]
+
     def post(self, request, *args, **kwargs):
-        print(kwargs['recordId'])
-        print(request.body)
+
+        data = request.POST
+
+        id = kwargs['recordId']
+
+        record = self.transform_record(id, data)
+
+        # POST request body, representing an edited individual record
+        body = str(record).encode('utf-8')
+
+        solr_host = "http://localhost:8983/solr/annotation"
+        url = solr_host + "/update?commit=true"
+
+        request = urllib.request.Request(url, body)
+        request.add_header('Content-Type', 'application/json')
+        response = urllib.request.urlopen(request)
+        str_response = response.readall().decode('utf-8')
+
         return HttpResponse()
