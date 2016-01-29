@@ -1,14 +1,11 @@
 import json
 import urllib
 
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.views import generic
-from django.shortcuts import render, redirect
-from django.core.files.storage import default_storage
-from django.views.decorators.csrf import csrf_exempt
-from django.core.files.base import ContentFile
+from django.shortcuts import render
 from django.conf import settings
 from django.core.urlresolvers import reverse
+from django.http import HttpResponse
 
 
 class IndexView(generic.TemplateView):
@@ -59,7 +56,10 @@ class QueueView(generic.TemplateView):
         summaryRecord.update(sourceFields)
         summaryRecord.update(annotFields)
 
-        #print(len(individualRecords))
+        individualRecords = sorted(
+                        individualRecords,
+                        key=lambda k: k['sourceCellLine']
+                    )
 
         tmpIRs = []
         for i, individualRecord in enumerate(individualRecords):
@@ -77,8 +77,6 @@ class QueueView(generic.TemplateView):
 
         individualRecords = tmpIRs
 
-        #print(individualRecords)
-
         for i, individualRecord in enumerate(individualRecords):
             if "sourceCellLine" not in individualRecord:
                 print('"sourceCellLine" not in individualRecord')
@@ -86,12 +84,9 @@ class QueueView(generic.TemplateView):
 
             cellLine = individualRecords[i]["sourceCellLine"]
 
-            if i == 0:
-                prevCellLine = ""
-            else:
-                prevCellLine = individualRecords[i-1]["sourceCellLine"]
+            prevCellLine = individualRecords[i-1]["sourceCellLine"]
 
-            if cellLine == prevCellLine:
+            if cellLine == prevCellLine or i == 0:
                 summaryRecord["individualRecords"].append(individualRecord)
             else:
                 recordsCount = summaryRecord["individualRecords"]
@@ -101,7 +96,10 @@ class QueueView(generic.TemplateView):
                     summaryRecord['sourceCellLine'] = prevCellLine
 
                 summaryRecords.append(summaryRecord)
-                summaryRecord = {"individualRecords": []}
+                summaryRecord = {
+                    "individualRecords": [individualRecord],
+                    "index": i
+                }
                 summaryRecord.update(sourceFields)
                 summaryRecord.update(annotFields)
 
@@ -117,101 +115,6 @@ class QueueView(generic.TemplateView):
     def get_context_data(self, queueId, **kwargs):
 
         context = super(QueueView, self).get_context_data()
-
-
-        # Test / mock data
-        summaryRecords = [
-            {
-                "sourceCellLine": "HeLa",
-                "sourceCellType": "epf tm",
-                "sourceCellTreatment": "firboblast",
-                "sourceCellAnatomy": "firboblast",
-                "sourceTreatment": "Folderol",
-                "sourceSpecies": "human",
-                "sourceDisease": "gout",
-                "annotCellLine": "",
-                "annotCellType": "",
-                "annotCellTreatment": "",
-                "annotCellAnatomy": "",
-                "annotSpecies": "",
-                "annotSpecies": "",
-                "annotDisease": "",
-                "note": "",
-                "individualRecords": [
-                    {
-                        "id": 12,
-                        "sourceCellLine": "HeLa",
-                        "sourceCellType": "epf tm",
-                        "sourceCellTreatment": "firboblast",
-                        "sourceCellAnatomy": "foot",
-                        "sourceSpecies": "Folderol",
-                        "sourceSpecies": "human",
-                        "sourceDisease": "gout",
-                        "annotCellLine": "",
-                        "annotCellType": "",
-                        "annotCellTreatment": "",
-                        "annotCellAnatomy": "",
-                        "annotSpecies": "",
-                        "annotSpecies": "",
-                        "annotDisease": "",
-                        "note": ""
-                    }
-                ]
-            },
-            {
-                "sourceCellLine": "epf-1",
-                "sourceCellType": "epf tm",
-                "sourceCellTreatment": "firboblast",
-                "sourceCellAnatomy": "foot",
-                "sourceSpecies": "Folderol",
-                "sourceSpecies": "human",
-                "sourceDisease": "gout",
-                "annotCellLine": "",
-                "annotCellType": "",
-                "annotCellTreatment": "",
-                "annotCellAnatomy": "",
-                "annotSpecies": "",
-                "annotSpecies": "",
-                "annotDisease": "",
-                "note": "",
-                "individualRecords": [
-                    {
-                        "id": 1234,
-                        "sourceCellLine": "epf-1",
-                        "sourceCellType": "epf tm",
-                        "sourceCellTreatment": "firboblast",
-                        "sourceCellAnatomy": "firboblast",
-                        "sourceSpecies": "Folderol",
-                        "sourceSpecies": "human",
-                        "sourceDisease": "gout",
-                        "annotCellLine": "",
-                        "annotCellType": "",
-                        "annotCellTreatment": "",
-                        "annotCellAnatomy": "",
-                        "annotSpecies": "",
-                        "annotDisease": "",
-                        "note": ""
-                    },
-                    {
-                        "id": 12345,
-                        "sourceCellLine": "epf-1",
-                        "sourceCellType": "",
-                        "sourceCellTreatment": "",
-                        "sourceCellAnatomy": "firboblast",
-                        "sourceSpecies": "",
-                        "sourceSpecies": "human",
-                        "sourceDisease": "gout",
-                        "annotCellLine": "",
-                        "annotCellType": "",
-                        "annotCellTreatment": "",
-                        "annotCellAnatomy": "",
-                        "annotSpecies": "",
-                        "annotDisease": "",
-                        "note": ""
-                    }
-                ]
-            }
-        ]
 
         # TODO:
         # Refactor into modular methods and models
@@ -260,3 +163,55 @@ class QueueView(generic.TemplateView):
         context["summaryRecords"] = summaryRecords
 
         return context
+
+
+class RecordView(generic.TemplateView):
+
+    def transform_record(self, id, data):
+        # Transforms data to record format used by this app's Solr core
+        record = {
+            'annotCellLine': data.get('annotCellLine'),
+            'annotCellType': data.get('annotCellType'),
+            'annotAnatomy': data.get('annotAnatomy'),
+            'annotSpecies': data.get('annotSpecies'),
+            'annotDisease': data.get('annotDisease')
+        }
+
+        nr = {'id': id} # new record
+        for key in record:
+            value = record[key]
+            if value == '':
+                # We store empty strings as "0" in Solr.  I forget exactly why.
+                # TODO: Investigate why.  If needed, document, else refactor.
+                nr[key] = {'set': '0'}
+            else:
+                nr[key] = {'set': value}
+
+        return [nr]
+
+    def post(self, request, *args, **kwargs):
+
+        data = request.POST
+
+        id = kwargs['recordId']
+
+        record = self.transform_record(id, data)
+
+        # POST request body, representing an edited individual record
+        body = str(record).encode('utf-8')
+
+        solr_host = "http://localhost:8983/solr/annotation"
+        url = solr_host + "/update?commit=true"
+
+        # Example POST to update part of a Solr document in "annotation" core:
+        # curl 'http://localhost:8983/solr/annotation/update?commit=true' -d "[{'annotAnatomy': {'set': '0'}, 'annotDisease': {'set': '0'}, 'annotSpecies': {'set': '0'}, 'id': '1090570', 'annotCellType': {'set': '0'}, 'annotCellLine': {'set': 'test'}}]"
+        # Example read:
+        # curl 'http://localhost:8983/solr/annotation/select?wt=json&q=id:1090570'
+        # Another POST / partial update example:
+        # curl 'http://localhost:8983/solr/annotation/update?commit=true' -d '[{"id": 3854415, "sourceCellLine": {"set": "testfoo"}}]'
+        request = urllib.request.Request(url, body)
+        request.add_header('Content-Type', 'application/json')
+        response = urllib.request.urlopen(request)
+        str_response = response.readall().decode('utf-8')
+
+        return HttpResponse()
