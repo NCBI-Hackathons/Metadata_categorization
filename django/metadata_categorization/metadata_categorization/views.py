@@ -56,6 +56,11 @@ class QueueView(generic.TemplateView):
         summaryRecord.update(sourceFields)
         summaryRecord.update(annotFields)
 
+        individualRecords = sorted(
+                        individualRecords,
+                        key=lambda k: k['sourceCellLine']
+                    )
+
         tmpIRs = []
         for i, individualRecord in enumerate(individualRecords):
             tmpIR = {}
@@ -198,6 +203,12 @@ class RecordView(generic.TemplateView):
         solr_host = "http://localhost:8983/solr/annotation"
         url = solr_host + "/update?commit=true"
 
+        # Example POST to update part of a Solr document in "annotation" core:
+        # curl 'http://localhost:8983/solr/annotation/update?commit=true' -d "[{'annotAnatomy': {'set': '0'}, 'annotDisease': {'set': '0'}, 'annotSpecies': {'set': '0'}, 'id': '1090570', 'annotCellType': {'set': '0'}, 'annotCellLine': {'set': 'test'}}]"
+        # Example read:
+        # curl 'http://localhost:8983/solr/annotation/select?wt=json&q=id:1090570'
+        # Another POST / partial update example:
+        # curl 'http://localhost:8983/solr/annotation/update?commit=true' -d '[{"id": 3854415, "sourceCellLine": {"set": "testfoo"}}]'
         request = urllib.request.Request(url, body)
         request.add_header('Content-Type', 'application/json')
         response = urllib.request.urlopen(request)
