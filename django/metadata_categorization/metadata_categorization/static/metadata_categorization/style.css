@@ -22,3 +22,8 @@ body {
 .ui-dialog {
 	z-index: 1000;
 }
+
+.handsontable .source-hint {
+	font-style: italic;
+	background-color: #FFDFDF;
+}

@@ -1,3 +1,5 @@
+var currentSR;
+
 function csrfSafeMethod(method) {
     // these HTTP methods do not require CSRF protection
     return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
@@ -55,6 +57,39 @@ function renderPlus (instance, td, row, col, prop, value, cellProperties) {
 
 var plusEditor = Handsontable.editors.BaseEditor.prototype.extend();
 
+function renderSourceOrAnnot(instance, td, row, col, prop, value, cellProperties) {
+
+  var rowIndex = cellProperties.physicalRow, // current row index (perhaps after custom sorting)
+      srIndex = cellProperties.row, // original summary record index
+      sr = summaryRecords[srIndex],
+      annotProp = prop;
+      sourceProp = prop.replace('annot', 'source');
+
+  if (sr[annotProp] == '') {
+    $(td).addClass('source-hint').html(sr[sourceProp]);
+  } else {
+    $(td).removeClass('source-hint');
+  }
+
+}
+
+function renderIRSourceOrAnnot(instance, td, row, col, prop, value, cellProperties) {
+
+  var rowIndex = cellProperties.physicalRow, // current row index (perhaps after custom sorting)
+      irIndex = cellProperties.row, // original summary record index
+      sr = currentSR,
+      individualRecord = sr['individualRecords'][irIndex],
+      annotProp = prop;
+      sourceProp = prop.replace('annot', 'source');
+
+  if (individualRecord[annotProp] == '') {
+    $(td).addClass('source-hint').html(individualRecord[sourceProp]);
+  } else {
+    $(td).removeClass('source-hint');
+  }
+
+}
+
 plusEditor.prototype.prepare = function(row, col, prop, td, originalValue, cellProperties){
 
   //Invoke the original method
@@ -82,12 +117,15 @@ plusEditor.prototype.prepare = function(row, col, prop, td, originalValue, cellP
     columns: [
       {data: "id", readOnly: true, renderer: renderBiosampleId},
       {data: "sourceCellLine"},
-      {data: "annotCellLine"},
-      {data: "annotCellType"},
-      {data: "annotAnatomy"},
-      {data: "annotSpecies"},
-      {data: "annotDisease"}
+      {data: "annotCellLine", renderer: renderIRSourceOrAnnot},
+      {data: "annotCellType", renderer: renderIRSourceOrAnnot},
+      {data: "annotAnatomy", renderer: renderIRSourceOrAnnot},
+      {data: "annotSpecies", renderer: renderIRSourceOrAnnot},
+      {data: "annotDisease", renderer: renderIRSourceOrAnnot},
     ],
+    afterInit: function() {
+      currentSR = summaryRecords[srIndex];
+    },
     afterChange: function (change, source) {
       if (source === 'loadData') {
         return; //don't save this change
@@ -106,8 +144,7 @@ plusEditor.prototype.prepare = function(row, col, prop, td, originalValue, cellP
         'annotCellLine': data[2],
         'annotCellType': data[3],
         'annotAnatomy': data[4],
-        'annotSpecies': data[5],
-        'annotDisease': data[6]
+        'annotSpecies': data[5]
       };
 
       summaryRecords[srIndex][irIndex] = editedIndividualRecord;
@@ -159,11 +196,11 @@ $(document).ready(function() {
       },
       {data: "recordsCount", readOnly: true},
       {data: "sourceCellLine"},
-      {data: "annotCellLine"},
-      {data: "sourceCellType"},
-      {data: "sourceCellAnatomy"},
-      {data: "sourceSpecies"},
-      {data: "sourceDisease"}
+      {data: "annotCellLine", renderer: renderSourceOrAnnot},
+      {data: "sourceCellType", renderer: renderSourceOrAnnot},
+      {data: "sourceAnatomy", renderer: renderSourceOrAnnot},
+      {data: "sourceSpecies", renderer: renderSourceOrAnnot},
+      {data: "sourceDisease", renderer: renderSourceOrAnnot}
     ]
   })
 })
