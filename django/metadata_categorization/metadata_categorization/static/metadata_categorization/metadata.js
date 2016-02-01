@@ -1,109 +1,210 @@
+var currentSR;
 
-// See http://jsfiddle.net/rafael_cichocki/wwdg8/7/ for
-// reference for functions below
-function fnFormatDetails(table_id, html) {
-    var sOut = "<table id=\"summaryTable_" + table_id + "\">";
-    sOut += html;
-    sOut += "</table>";
-    return sOut;
+function csrfSafeMethod(method) {
+    // these HTTP methods do not require CSRF protection
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+}
+$.ajaxSetup({
+    beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+            var csrftoken = Cookies.get('csrftoken');
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        }
+    }
+});
+
+function biosampleAccToId(biosampleAcc) {
+  // Converts BioSample accession to individual record ID
+  // BioSample accessions have the form "SAMN" + 8 digits
+  // E.g. SAMN02730062 -> 2730062
+  var id = biosampleAcc.split(/SAMN[0]+/)[1];
+
+  return id;
 }
 
-var newRowData = summaryRecords;
+function idToBiosampleAcc(id) {
+  // Converts individual record ID to BioSample accession
+  // BioSample accessions have the form "SAMN" + 8 digits
+  // E.g. 2730062 -> SAMN02730062
+  var id = "" + id, // cast int to string
+      leadingZeros = Array(8 - id.length + 1).join("0"),
+      biosampleAcc = "SAMN" + leadingZeros + id;
 
-var iTableCounter = 1;
-  var oTable;
-  var oInnerTable;
-  var detailsTableHtml;
+  return biosampleAcc;
+}
 
-  $(document).ready(function () {
+function renderBiosampleId(instance, td, row, col, prop, value, cellProperties) {
 
-      detailsTableHtml = $("#detailsTable").html();
+  var biosampleAcc = idToBiosampleAcc(value);
 
-      //Insert a 'details' column to the table
-      var nCloneTh = document.createElement('th');
-      var nCloneTd = document.createElement('td');
-      nCloneTd.innerHTML = '<img src="http://i.imgur.com/SD7Dz.png">';
-      nCloneTd.className = "center";
+  var href = "https://www.ncbi.nlm.nih.gov/biosample/" + biosampleAcc,
+      title = "View full BioSample record"
+      link = '<a href="' + href + '" target="blank" title="' + title + '">' +
+        biosampleAcc + '</a>';
 
-      $('#summaryTable thead tr').each(function () {
-          this.insertBefore(nCloneTh, this.childNodes[0]);
+  $(td).html(link);
+}
+
+function renderPlus (instance, td, row, col, prop, value, cellProperties) {
+
+  var plusIcon =
+    '<svg class="icon icon--plus" viewBox="0 0 5 5" height="20px" width="20px">' +
+      '<path d="M2 1 h1 v1 h1 v1 h-1 v1 h-1 v-1 h-1 v-1 h1 z" />' +
+    '</svg>';
+
+  $(td).html(plusIcon);
+}
+
+var plusEditor = Handsontable.editors.BaseEditor.prototype.extend();
+
+function renderSourceOrAnnot(instance, td, row, col, prop, value, cellProperties) {
+
+  var rowIndex = cellProperties.physicalRow, // current row index (perhaps after custom sorting)
+      srIndex = cellProperties.row, // original summary record index
+      sr = summaryRecords[srIndex],
+      annotProp = prop,
+      annotValue = sr[annotProp],
+      sourceProp = prop.replace('annot', 'source'),
+      sourceValue = sr[sourceProp];
+
+  if (sr[annotProp] == '') {
+    $(td).addClass('source-value').removeClass('annot-value').html(sourceValue);
+  } else {
+    $(td).addClass('annot-value').removeClass('source-value').html(annotValue);
+  }
+
+}
+
+function renderIRSourceOrAnnot(instance, td, row, col, prop, value, cellProperties) {
+
+  var rowIndex = cellProperties.physicalRow, // current row index (perhaps after custom sorting)
+      irIndex = cellProperties.row, // original summary record index
+      sr = currentSR,
+      individualRecord = sr['individualRecords'][irIndex],
+      annotProp = prop,
+      annotValue = individualRecord[annotProp],
+      sourceProp = prop.replace('annot', 'source'),
+      sourceValue = individualRecord[sourceProp];
+
+  if (individualRecord[annotProp] == '') {
+    $(td).addClass('source-value').removeClass('annot-value').html(sourceValue);
+  } else {
+    $(td).addClass('annot-value').removeClass('source-value').html(annotValue);
+  }
+
+}
+
+plusEditor.prototype.prepare = function(row, col, prop, td, originalValue, cellProperties){
+
+  //Invoke the original method
+  Handsontable.editors.BaseEditor.prototype.prepare.apply(this, arguments);
+
+  var rowIndex = cellProperties.physicalRow, // current row index (perhaps after custom sorting)
+      srIndex = cellProperties.row, // original summary record index
+      summaryRecord = summaryRecords[srIndex],
+      individualRecords = summaryRecord["individualRecords"],
+      sourceCellLine = summaryRecord["sourceCellLine"],
+      irContainer = document.getElementById("irContainer");
+
+  var irQueue = new Handsontable(irContainer, {
+    data: individualRecords,
+    height: 300,
+    stretchH: 'all',
+    sortIndicator: true,
+    columnSorting: true,
+    contextMenu: true,
+    colWidths: [, , , , , , ],
+    colHeaders: [
+      "BioSample ID", "Source cell line", "Cell line", "Cell type", "Anatomy",
+      "Species"//, "Disease"
+    ],
+    columns: [
+      {data: "id", readOnly: true, renderer: renderBiosampleId},
+      {data: "sourceCellLine"},
+      {data: "annotCellLine", renderer: renderIRSourceOrAnnot},
+      {data: "annotCellType", renderer: renderIRSourceOrAnnot},
+      {data: "annotAnatomy", renderer: renderIRSourceOrAnnot},
+      {data: "annotSpecies", renderer: renderIRSourceOrAnnot}//,
+      //{data: "annotDisease", renderer: renderIRSourceOrAnnot},
+    ],
+    afterInit: function() {
+      currentSR = summaryRecords[srIndex];
+    },
+    afterChange: function (change, source) {
+      if (source === 'loadData') {
+        return; //don't save this change
+      }
+
+      var irIndex = change[0][0], // e.g. 0
+          column = change[0][1], // e.g. annotCellLine
+          oldValue = change[0][2], // e.g. null
+          newValue = change[0][3], // e.g. HeLa
+          data = this.getDataAtRow(irIndex),
+          id = data[0];
+
+      var editedIndividualRecord = {
+        'id': id,
+        //'sourceCellLine': data[1],
+        'annotCellLine': data[2],
+        'annotCellType': data[3],
+        'annotAnatomy': data[4],
+        'annotSpecies': data[5]
+      };
+
+      summaryRecords[srIndex][irIndex] = editedIndividualRecord;
+
+      $.ajax({
+        'url': '/record/' + id,
+        'method': 'POST',
+        'data': editedIndividualRecord
       });
 
-      $('#summaryTable tbody tr').each(function () {
-          this.insertBefore(nCloneTd.cloneNode(true), this.childNodes[0]);
-      });
+    }
+  })
 
-
-      //Initialse DataTables, with no sorting on the 'details' column
-      var oTable = $('#summaryTable').dataTable({
-          "bJQueryUI": true,
-          "aaData": newRowData,
-          "bPaginate": true,
-          "aoColumns": [
-            {
-               "mDataProp": null,
-               "sClass": "control center",
-               "sDefaultContent": '<img src="http://i.imgur.com/SD7Dz.png">'
-            },
-            { "mDataProp": "sourceCellLine"},
-            { "mDataProp": "sourceCellType"},
-            { "mDataProp": "sourceCellTreatment"},
-            { "mDataProp": "sourceAnatomy"},
-            { "mDataProp": "sourceSpecies"},
-            { "mDataProp": "sourceDisease"}
-          ],
-          "oLanguage": {
-    		    "sInfo": "_TOTAL_ entries"
-      		},
-          "aaSorting": [[1, 'desc']]
-      });
-
-      /* Add event listener for opening and closing details
-      * Note that the indicator for showing which row is open is not controlled by DataTables,
-      * rather it is done here
-      */
-      $('#summaryTable tbody td img').live('click', function () {
-          var nTr = $(this).parents('tr')[0];
-          var nTds = this;
-
-          if (oTable.fnIsOpen(nTr)) {
-              /* This row is already open - close it */
-              this.src = "http://i.imgur.com/SD7Dz.png";
-              oTable.fnClose(nTr);
-          }
-          else {
-              /* Open this row */
-              var rowIndex = oTable.fnGetPosition( $(nTds).closest('tr')[0] );
-              var detailsRowData = newRowData[rowIndex].individualRecords;
-
-              this.src = "http://i.imgur.com/d4ICC.png";
-              oTable.fnOpen(nTr, fnFormatDetails(iTableCounter, detailsTableHtml), 'details');
-              oInnerTable = $("#summaryTable_" + iTableCounter).dataTable({
-                  "bJQueryUI": true,
-                  "bFilter": false,
-                  "aaData": detailsRowData,
-                  "bSort" : true, // disables sorting
-                  "aoColumns": [
-                    { "mDataProp": "sourceCellLine"},
-                    { "mDataProp": "annotCellLine"},
-                    { "mDataProp": "sourceCellType"},
-                    { "mDataProp": "sourceAnatomy"},
-                    { "mDataProp": "sourceCellTreatment"},
-                    { "mDataProp": "sourceSpecies"},
-                    { "mDataProp": "sourceDisease"}
-    	            ],
-                  "bPaginate": true,
-                  "oLanguage": {
-					          "sInfo": "_TOTAL_ entries"
-		              }
-              });
-              iTableCounter = iTableCounter + 1;
-          }
-      });
-
-
+  $('#irDialog').dialog({
+    title: 'Edit individual records',
+    height: 400,
+    width: 950,
+    create: function(event, ui) {
+      // Fix minor UI artifacts
+      $('.ui-dialog-titlebar-close .ui-button-text').remove();
+    },
+    close: function(event, ui) {
+      irQueue.destroy();
+    }
   });
 
+};
+
 $(document).ready(function() {
-  $("#queue").DataTable();
-});
+
+  var container = document.getElementById("queue");
+
+  var queue = new Handsontable(container, {
+    data: summaryRecords,
+    height: 396,
+    stretchH: 'all',
+    sortIndicator: true,
+    columnSorting: true,
+    contextMenu: true,
+    colWidths: [7, 10, , , , , ,],
+    colHeaders: [
+      "", "#", "Source cell line", "Cell line", "Cell type", "Anatomy",
+      "Species"//, "Disease"
+    ],
+    columns: [
+      {
+        data: "", disableVisualSelection: true, editor: plusEditor,
+        renderer: renderPlus,
+      },
+      {data: "recordsCount", readOnly: true},
+      {data: "sourceCellLine"},
+      {data: "annotCellLine", renderer: renderSourceOrAnnot},
+      {data: "annotCellType", renderer: renderSourceOrAnnot},
+      {data: "annotAnatomy", renderer: renderSourceOrAnnot},
+      {data: "annotSpecies", renderer: renderSourceOrAnnot}//,
+      //{data: "sourceDisease", renderer: renderSourceOrAnnot}
+    ]
+  })
+})
