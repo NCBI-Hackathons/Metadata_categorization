@@ -36,7 +36,7 @@ class QueueView(generic.TemplateView):
             "sourceCellTreatment": "",
             "sourceAnatomy": "",
             "sourceTreatment": "",
-            "sourceSpecies": "Homo Sapiens",
+            "sourceSpecies": "",
             "sourceDisease": ""
         }
 
@@ -102,6 +102,32 @@ class QueueView(generic.TemplateView):
                 }
                 summaryRecord.update(sourceFields)
                 summaryRecord.update(annotFields)
+
+        newSRs = []
+        for i, summaryRecord in enumerate(summaryRecords[:10]):
+            prevFields = {}
+            newSR = summaryRecord
+            individualRecords = summaryRecord['individualRecords']
+
+            if len(individualRecords) == 1:
+                newSR.update(individualRecords[0])
+                newSRs.append(newSR)
+                continue
+
+            for j, individualRecord in enumerate(individualRecords):
+                for field in individualRecord:
+                    if j == 0:
+                        prevFields[field] = individualRecord[field]
+                    else:
+                        if (
+                            prevFields[field] != "" and
+                            prevFields[field] == individualRecord[field]
+                        ):
+                            newSR[field] = prevFields[field]
+                        else:
+                            newSR[field] = ""
+            newSRs.append(newSR)
+        summaryRecords = newSRs
 
         return summaryRecords
 
