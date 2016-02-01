@@ -23,7 +23,12 @@ body {
 	z-index: 1000;
 }
 
-.handsontable .source-hint {
+.handsontable .source-value {
 	font-style: italic;
 	background-color: #FFDFDF;
+}
+
+.handsontable .annot-value {
+	font-style: italic;
+	background-color: #DFFFDF;
 }

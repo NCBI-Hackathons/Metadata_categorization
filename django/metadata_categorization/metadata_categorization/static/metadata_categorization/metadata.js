@@ -62,13 +62,15 @@ function renderSourceOrAnnot(instance, td, row, col, prop, value, cellProperties
   var rowIndex = cellProperties.physicalRow, // current row index (perhaps after custom sorting)
       srIndex = cellProperties.row, // original summary record index
       sr = summaryRecords[srIndex],
-      annotProp = prop;
-      sourceProp = prop.replace('annot', 'source');
+      annotProp = prop,
+      annotValue = sr[annotProp],
+      sourceProp = prop.replace('annot', 'source'),
+      sourceValue = sr[sourceProp];
 
   if (sr[annotProp] == '') {
-    $(td).addClass('source-hint').html(sr[sourceProp]);
+    $(td).addClass('source-value').removeClass('annot-value').html(sourceValue);
   } else {
-    $(td).removeClass('source-hint');
+    $(td).addClass('annot-value').removeClass('source-value').html(annotValue);
   }
 
 }
@@ -79,13 +81,15 @@ function renderIRSourceOrAnnot(instance, td, row, col, prop, value, cellProperti
       irIndex = cellProperties.row, // original summary record index
       sr = currentSR,
       individualRecord = sr['individualRecords'][irIndex],
-      annotProp = prop;
-      sourceProp = prop.replace('annot', 'source');
+      annotProp = prop,
+      annotValue = individualRecord[annotProp],
+      sourceProp = prop.replace('annot', 'source'),
+      sourceValue = individualRecord[sourceProp];
 
   if (individualRecord[annotProp] == '') {
-    $(td).addClass('source-hint').html(individualRecord[sourceProp]);
+    $(td).addClass('source-value').removeClass('annot-value').html(sourceValue);
   } else {
-    $(td).removeClass('source-hint');
+    $(td).addClass('annot-value').removeClass('source-value').html(annotValue);
   }
 
 }
@@ -112,7 +116,7 @@ plusEditor.prototype.prepare = function(row, col, prop, td, originalValue, cellP
     colWidths: [, , , , , , ],
     colHeaders: [
       "BioSample ID", "Source cell line", "Cell line", "Cell type", "Anatomy",
-      "Species", "Disease"
+      "Species"//, "Disease"
     ],
     columns: [
       {data: "id", readOnly: true, renderer: renderBiosampleId},
@@ -120,8 +124,8 @@ plusEditor.prototype.prepare = function(row, col, prop, td, originalValue, cellP
       {data: "annotCellLine", renderer: renderIRSourceOrAnnot},
       {data: "annotCellType", renderer: renderIRSourceOrAnnot},
       {data: "annotAnatomy", renderer: renderIRSourceOrAnnot},
-      {data: "annotSpecies", renderer: renderIRSourceOrAnnot},
-      {data: "annotDisease", renderer: renderIRSourceOrAnnot},
+      {data: "annotSpecies", renderer: renderIRSourceOrAnnot}//,
+      //{data: "annotDisease", renderer: renderIRSourceOrAnnot},
     ],
     afterInit: function() {
       currentSR = summaryRecords[srIndex];
@@ -187,7 +191,7 @@ $(document).ready(function() {
     colWidths: [7, 10, , , , , ,],
     colHeaders: [
       "", "#", "Source cell line", "Cell line", "Cell type", "Anatomy",
-      "Species", "Disease"
+      "Species"//, "Disease"
     ],
     columns: [
       {
@@ -197,10 +201,10 @@ $(document).ready(function() {
       {data: "recordsCount", readOnly: true},
       {data: "sourceCellLine"},
       {data: "annotCellLine", renderer: renderSourceOrAnnot},
-      {data: "sourceCellType", renderer: renderSourceOrAnnot},
-      {data: "sourceAnatomy", renderer: renderSourceOrAnnot},
-      {data: "sourceSpecies", renderer: renderSourceOrAnnot},
-      {data: "sourceDisease", renderer: renderSourceOrAnnot}
+      {data: "annotCellType", renderer: renderSourceOrAnnot},
+      {data: "annotAnatomy", renderer: renderSourceOrAnnot},
+      {data: "annotSpecies", renderer: renderSourceOrAnnot}//,
+      //{data: "sourceDisease", renderer: renderSourceOrAnnot}
     ]
   })
 })
