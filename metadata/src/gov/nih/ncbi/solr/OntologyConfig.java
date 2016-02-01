@@ -21,6 +21,7 @@ public class OntologyConfig {
 			"{delete-field: {name:tissue}}",
 			"{delete-field: {name:anatomy}}",
 			"{delete-field: {name:disease}}",
+			"{add-field: {name: cloId, type: string, indexed: true, stored: true, multiValued:false, uniqueKey:true}}",
 			"{add-field: {name: cellLine, type: text_general, indexed: true, stored:true, multiValued:false}}",
 			"{add-field: {name: cellType, type: text_general, indexed: true, stored:true, multiValued:false}}",
 			"{add-field: {name: organism, type: text_general, indexed: true, stored:true, multiValued:false}}",

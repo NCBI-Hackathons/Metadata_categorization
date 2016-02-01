@@ -75,6 +75,7 @@ public class PopulateOntologyJob {
 				}
 				try {
 					solr.add(doc);
+					System.out.println (parser.get("CLO_ID"));
 				} catch (Exception e) {
 					e.printStackTrace();
 					continue;
