@@ -36,8 +36,8 @@ class QueueView(generic.TemplateView):
             "sourceCellTreatment": "",
             "sourceAnatomy": "",
             "sourceTreatment": "",
-            "sourceSpecies": "",
-            "sourceDisease": ""
+            "sourceSpecies": ""#,
+            #"sourceDisease": ""
         }
 
         annotFields = {
@@ -46,8 +46,8 @@ class QueueView(generic.TemplateView):
             "annotCellTreatment": "",
             "annotAnatomy": "",
             "annotSpecies": "",
-            "annotSpecies": "",
-            "annotDisease": ""
+            "annotSpecies": ""#,
+            #"annotDisease": ""
         }
 
         summaryRecords = []
@@ -65,6 +65,8 @@ class QueueView(generic.TemplateView):
         for i, individualRecord in enumerate(individualRecords):
             tmpIR = {}
             for field in individualRecord:
+                if field == 'sourceDisease' or field == 'annotDisease':
+                    continue
                 thisField = individualRecord[field]
                 tmpIR[field] = thisField
                 if thisField == '0' or thisField == "   ":
@@ -200,7 +202,7 @@ class RecordView(generic.TemplateView):
             'annotCellType': data.get('annotCellType'),
             'annotAnatomy': data.get('annotAnatomy'),
             'annotSpecies': data.get('annotSpecies'),
-            'annotDisease': data.get('annotDisease')
+            #'annotDisease': data.get('annotDisease')
         }
 
         nr = {'id': id} # new record
