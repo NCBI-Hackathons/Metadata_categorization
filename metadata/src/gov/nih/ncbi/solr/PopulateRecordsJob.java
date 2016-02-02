@@ -128,8 +128,9 @@ public class PopulateRecordsJob {
 					build.append(disease + " ");
 					build.append(healthState + " ");
 					build.append(phenotype);
-					if (!build.toString().equals("   ")){
-						doc.addField("sourceDisease", build.toString());
+					String trimmed = build.toString().trim();
+					if (!trimmed.equals("")){
+						doc.addField("sourceDisease", build.toString().trim());
 					}
 					else{
 						doc.addField("sourceDisease", "0");

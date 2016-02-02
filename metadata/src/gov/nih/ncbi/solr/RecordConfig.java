@@ -15,7 +15,6 @@ public class RecordConfig {
 	
 	public static List<String> configList = Arrays.asList(		
 			"{delete-field: {name: queueId}}",
-			"{delete-field: {name: id}}",
 			"{delete-field: {name: sourceCellLine}}",
 			"{delete-field: {name: sourceCellType}}",
 			"{delete-field: {name: sourceSpecies}}",
@@ -33,7 +32,6 @@ public class RecordConfig {
 			"{delete-field: {name: note}}",
 			
 			"{add-field: {name: queueId, type: int, indexed: true, stored:true, multiValued:false }}",
-			"{add-field: {name: id, type: int, indexed: true, stored:true, multiValued:false }}",
 			"{add-field: {name: sourceCellLine, type: text_general, indexed: true, stored:true, multiValued:false }}",
 			"{add-field: {name: sourceCellType, type: text_general, indexed: true, stored:true, multiValued:false }}",
 			"{add-field: {name: sourceSpecies, type: text_general,  indexed: true, stored:true, multiValued:false }}",
