@@ -4,9 +4,19 @@ A crowdsourcing/expert curation platform for metadata categorization
 
 The Metadata Categorization web application allows expert biological indexers to curate a sample set drawn from [NCBI BioSample](http://www.ncbi.nlm.nih.gov/biosample) data.  The purpose of the annotation tool is to identify terms in the user submission that can be correlated to controlled terms from the [Cell Line Ontology](http://www.clo-ontology.org).  In the best case, the annotator can identify the correct cell line from submitted data and then additional information about the submitted data such as cell type, tissue, and disease can be populated from the Cell Line Ontology.
 
-#Solr-based Data Sources
+#Technology
 
-This project depends on two Solr cores generated for this purpose which contain the relevant data from BioSample and the Cell Line Ontology. The Solr core generated from BioSample will store the user-submitted data extracted from BioSample as well as the annotations supplied by the curators.
+##Solr-based Data Sources
+
+This project depends on two [Solr](http://lucene.apache.org/solr/) cores generated for this purpose which contain the relevant data from BioSample and the Cell Line Ontology. The Solr core generated from BioSample will store the user-submitted data extracted from BioSample as well as the annotations supplied by the curators.
+
+##Django
+
+The back-end uses [Django](https://www.djangoproject.com/), a high-level Python web framework, to handle URL routing, aggregating individual records from BioSample into summary records, as well as reading from and writing to Solr.
+
+##Handsontable
+
+The front-end uses the free version of [Handsontable](https://docs.handsontable.com), an Excel-like composite spreadsheet component.  Dialogs and certain other features use [jQuery](https://jquery.com/) and [jQuery UI](http://jqueryui.com/).
 
 #Future work
 
