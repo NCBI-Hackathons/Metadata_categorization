@@ -156,7 +156,7 @@ plusEditor.prototype.prepare = function(row, col, prop, td, originalValue, cellP
       $.ajax({
         'url': '/record/' + id,
         'method': 'POST',
-        'data': editedIndividualRecord
+        'data': {'records': JSON.stringify(editedIndividualRecord)}
       });
 
     }
@@ -207,7 +207,7 @@ $(document).ready(function() {
       //{data: "sourceDisease", renderer: renderSourceOrAnnot}
     ],
     afterChange: function (change, source) {
-      if (source === 'loadData') {
+      if (source === 'loadData' || source === 'external') {
         return; //don't save this change
       }
 
@@ -245,19 +245,6 @@ $(document).ready(function() {
 
       var editedIRs = [];
 
-      /*
-      for (var i = 0; i < data.length; i++) {
-        srValue = data[i];
-        irField = srDataIndexToIRFieldMap[i];
-        if (srValue != "") {
-          for (var j = 0; j < irList.length; j++) {
-            summaryRecords[srIndex]['individualRecords'][j][irField] = srValue;
-            editedIR = summaryRecords[srIndex]['individualRecords'][j];
-            editedIRs.push(editedIR);
-          }
-        }
-      }
-      */
       for (var j = 0; j < irList.length; j++) {
         for (var i = 0; i < data.length; i++) {
             srValue = data[i];
@@ -267,15 +254,17 @@ $(document).ready(function() {
             }
         }
         editedIR = summaryRecords[srIndex]['individualRecords'][j];
-        editedIRs.push(JSON.stringify(editedIR));
+        editedIRs.push(editedIR);
       }
 
       console.log(editedIRs)
 
+      editedIRs = JSON.stringify(editedIRs);
+
       $.ajax({
         'url': '/records/',
-        'method': 'POST',
-        'data': editedIRs
+        'type': 'POST',
+        'data': {'records': editedIRs}
       });
 
     }

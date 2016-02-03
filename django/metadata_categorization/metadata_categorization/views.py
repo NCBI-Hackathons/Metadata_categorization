@@ -197,12 +197,12 @@ class RecordView(generic.TemplateView):
 
     def transform_record(self, id, data):
         # Transforms data to record format used by this app's Solr core
+
         record = {
-            'annotCellLine': data.get('annotCellLine'),
-            'annotCellType': data.get('annotCellType'),
-            'annotAnatomy': data.get('annotAnatomy'),
-            'annotSpecies': data.get('annotSpecies'),
-            #'annotDisease': data.get('annotDisease')
+            'annotCellLine': data['annotCellLine'],
+            'annotCellType': data['annotCellType'],
+            'annotAnatomy': data['annotAnatomy'],
+            'annotSpecies': data['annotSpecies'],
         }
 
         nr = {'id': id} # new record
@@ -215,18 +215,11 @@ class RecordView(generic.TemplateView):
             else:
                 nr[key] = {'set': value}
 
-        return [nr]
+        return nr
 
-    def post(self, request, *args, **kwargs):
-
-        data = request.POST
-
-        id = kwargs['recordId']
-
-        record = self.transform_record(id, data)
-
+    def update_solr(self, records):
         # POST request body, representing an edited individual record
-        body = str(record).encode('utf-8')
+        body = str(records).encode('utf-8')
 
         solr_host = "http://localhost:8983/solr/annotation"
         url = solr_host + "/update?commit=true"
@@ -242,17 +235,34 @@ class RecordView(generic.TemplateView):
         response = urllib.request.urlopen(request)
         str_response = response.readall().decode('utf-8')
 
+    def post(self, request, *args, **kwargs):
+
+        data = request.POST
+
+        id = kwargs['recordId']
+
+        data = json.loads(data['records'])
+        record = self.transform_record(id, data)
+        record = [record]
+
+        self.update_solr(record)
+
         return HttpResponse()
+
 
 class RecordsView(RecordView):
 
     def post(self, request, *args, **kwargs):
 
         data = request.POST
+        records = json.loads(data['records'])
 
-        #print(data['records[0][id]'])
-        foo = json.loads(data)
-        print(foo)
-        print(foo[0])
+        transformed_records = []
+        for record in records:
+            id = record['id']
+            transformed_record = self.transform_record(id, record)
+            transformed_records.append(transformed_record)
+
+        self.update_solr(transformed_records)
 
         return HttpResponse()
