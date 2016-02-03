@@ -205,6 +205,80 @@ $(document).ready(function() {
       {data: "annotAnatomy", renderer: renderSourceOrAnnot},
       {data: "annotSpecies", renderer: renderSourceOrAnnot}//,
       //{data: "sourceDisease", renderer: renderSourceOrAnnot}
-    ]
+    ],
+    afterChange: function (change, source) {
+      if (source === 'loadData') {
+        return; //don't save this change
+      }
+
+      var srIndex = change[0][0], // e.g. 0
+          column = change[0][1], // e.g. annotCellLine
+          oldValue = change[0][2], // e.g. null
+          newValue = change[0][3], // e.g. HeLa
+          data = this.getDataAtRow(srIndex),
+          id = data[0];
+
+      var editedRecords = [];
+
+      var thisSummaryRecord = summaryRecords[srIndex],
+          irList = thisSummaryRecord['individualRecords'],
+          irField,
+          srValue,
+          editedIR;
+
+
+      var editedIndividualRecord = {
+        'id': id,
+        //'sourceCellLine': data[1],
+        'annotCellLine': data[2],
+        'annotCellType': data[3],
+        'annotAnatomy': data[4],
+        'annotSpecies': data[5]
+      };
+
+      var srDataIndexToIRFieldMap = {
+        '3': 'annotCellLine',
+        '4': 'annotCellType',
+        '5': 'annotAnatomy',
+        '6': 'annotSpecies'
+      }
+
+      var editedIRs = [];
+
+      /*
+      for (var i = 0; i < data.length; i++) {
+        srValue = data[i];
+        irField = srDataIndexToIRFieldMap[i];
+        if (srValue != "") {
+          for (var j = 0; j < irList.length; j++) {
+            summaryRecords[srIndex]['individualRecords'][j][irField] = srValue;
+            editedIR = summaryRecords[srIndex]['individualRecords'][j];
+            editedIRs.push(editedIR);
+          }
+        }
+      }
+      */
+      for (var j = 0; j < irList.length; j++) {
+        for (var i = 0; i < data.length; i++) {
+            srValue = data[i];
+            irField = srDataIndexToIRFieldMap[i];
+            if (srValue != "") {
+              summaryRecords[srIndex]['individualRecords'][j][irField] = srValue;
+            }
+        }
+        editedIR = summaryRecords[srIndex]['individualRecords'][j];
+        editedIRs.push(JSON.stringify(editedIR));
+      }
+
+      console.log(editedIRs)
+
+      $.ajax({
+        'url': '/records/',
+        'method': 'POST',
+        'data': editedIRs
+      });
+
+    }
+
   })
 })

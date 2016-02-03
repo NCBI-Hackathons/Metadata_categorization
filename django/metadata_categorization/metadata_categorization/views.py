@@ -106,7 +106,7 @@ class QueueView(generic.TemplateView):
                 summaryRecord.update(annotFields)
 
         newSRs = []
-        for i, summaryRecord in enumerate(summaryRecords[:10]):
+        for i, summaryRecord in enumerate(summaryRecords):
             prevFields = {}
             newSR = summaryRecord
             individualRecords = summaryRecord['individualRecords']
@@ -241,5 +241,18 @@ class RecordView(generic.TemplateView):
         request.add_header('Content-Type', 'application/json')
         response = urllib.request.urlopen(request)
         str_response = response.readall().decode('utf-8')
+
+        return HttpResponse()
+
+class RecordsView(RecordView):
+
+    def post(self, request, *args, **kwargs):
+
+        data = request.POST
+
+        #print(data['records[0][id]'])
+        foo = json.loads(data)
+        print(foo)
+        print(foo[0])
 
         return HttpResponse()
