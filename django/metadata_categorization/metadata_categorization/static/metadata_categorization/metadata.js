@@ -166,6 +166,7 @@ plusEditor.prototype.prepare = function(row, col, prop, td, originalValue, cellP
     title: 'Edit individual records',
     height: 400,
     width: 950,
+    modal: true,
     create: function(event, ui) {
       // Fix minor UI artifacts
       $('.ui-dialog-titlebar-close .ui-button-text').remove();
@@ -181,9 +182,11 @@ $(document).ready(function() {
 
   var container = document.getElementById("queue");
 
+  var queueHeight = window.innerHeight - 120;
+
   var queue = new Handsontable(container, {
     data: summaryRecords,
-    height: 396,
+    height: queueHeight,
     stretchH: 'all',
     sortIndicator: true,
     columnSorting: true,
