@@ -16,7 +16,7 @@ The back-end uses [Django](https://www.djangoproject.com/), a high-level Python 
 
 ##Handsontable
 
-The front-end uses the free version of [Handsontable](https://docs.handsontable.com), an Excel-like composite spreadsheet component.  Dialogs and certain other features use [jQuery](https://jquery.com/) and [jQuery UI](http://jqueryui.com/).
+The front-end uses the free version of [Handsontable](https://docs.handsontable.com), an Excel-like composite spreadsheet component.  Handsontable provides built-in editing functionality for tabular data.  Dialogs and certain other features use [jQuery](https://jquery.com/) and [jQuery UI](http://jqueryui.com/).
 
 #Future work
 
@@ -25,10 +25,10 @@ The front-end uses the free version of [Handsontable](https://docs.handsontable.
 - [Issue 7](https://github.com/NCBI-Hackathons/Metadata_categorization/issues/7): Add "Recently Used" shortcut buttons to the web interface so that annotators can quickly access frequently used annotation terms
 
 #Screenshots
-Summary records, showing on-the-fly aggregations of individual BioSample records that have the same source cell line value:
+Summary records, showing on-the-fly aggregations of individual BioSample records that have the same source cell line value.
 ![Summary records](screenshots/summary_records.png)
 
-Individuals records for "HEK293T" source cell line, showing annotated value for "Tissue" field in green.  Unannotated (i.e. source) values are shown in red.
+Individuals records for "HEK293T" source cell line, shown upon click the "+" button at left in the HEK293T summary record.  Note the user-annotated value for "Tissue" field in green.  Unannotated (i.e. source) values are shown in red.
 ![Individual records](screenshots/individual_records.png)
 
 Editing fields at the the summary record level propagates value to all individual records in that group
