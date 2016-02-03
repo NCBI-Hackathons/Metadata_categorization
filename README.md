@@ -28,7 +28,7 @@ The front-end uses the free version of [Handsontable](https://docs.handsontable.
 Summary records, showing on-the-fly aggregations of individual BioSample records that have the same source cell line value.
 ![Summary records](screenshots/summary_records.png)
 
-Individuals records for "HEK293T" source cell line, shown upon click the "+" button at left in the HEK293T summary record.  Note the user-annotated value for "Tissue" field in green.  Unannotated (i.e. source) values are shown in red.
+Individuals records for "HEK293T" source cell line, shown upon clicking the "+" button at left in the HEK293T summary record.  Note the user-annotated value for "Tissue" field in green.  Unannotated (i.e. source) values are displayed in red.
 ![Individual records](screenshots/individual_records.png)
 
 Editing fields at the the summary record level propagates value to all individual records in that group
