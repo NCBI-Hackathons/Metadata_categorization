@@ -156,7 +156,7 @@ plusEditor.prototype.prepare = function(row, col, prop, td, originalValue, cellP
       $.ajax({
         'url': '/record/' + id,
         'method': 'POST',
-        'data': editedIndividualRecord
+        'data': {'records': JSON.stringify(editedIndividualRecord)}
       });
 
     }
@@ -166,6 +166,7 @@ plusEditor.prototype.prepare = function(row, col, prop, td, originalValue, cellP
     title: 'Edit individual records',
     height: 400,
     width: 950,
+    modal: true,
     create: function(event, ui) {
       // Fix minor UI artifacts
       $('.ui-dialog-titlebar-close .ui-button-text').remove();
@@ -181,9 +182,11 @@ $(document).ready(function() {
 
   var container = document.getElementById("queue");
 
+  var queueHeight = window.innerHeight - 120;
+
   var queue = new Handsontable(container, {
     data: summaryRecords,
-    height: 396,
+    height: queueHeight,
     stretchH: 'all',
     sortIndicator: true,
     columnSorting: true,
@@ -205,6 +208,69 @@ $(document).ready(function() {
       {data: "annotAnatomy", renderer: renderSourceOrAnnot},
       {data: "annotSpecies", renderer: renderSourceOrAnnot}//,
       //{data: "sourceDisease", renderer: renderSourceOrAnnot}
-    ]
+    ],
+    afterChange: function (change, source) {
+      if (source === 'loadData' || source === 'external') {
+        return; //don't save this change
+      }
+
+      var srIndex = change[0][0], // e.g. 0
+          column = change[0][1], // e.g. annotCellLine
+          oldValue = change[0][2], // e.g. null
+          newValue = change[0][3], // e.g. HeLa
+          data = this.getDataAtRow(srIndex),
+          id = data[0];
+
+      var editedRecords = [];
+
+      var thisSummaryRecord = summaryRecords[srIndex],
+          irList = thisSummaryRecord['individualRecords'],
+          irField,
+          srValue,
+          editedIR;
+
+
+      var editedIndividualRecord = {
+        'id': id,
+        //'sourceCellLine': data[1],
+        'annotCellLine': data[2],
+        'annotCellType': data[3],
+        'annotAnatomy': data[4],
+        'annotSpecies': data[5]
+      };
+
+      var srDataIndexToIRFieldMap = {
+        '3': 'annotCellLine',
+        '4': 'annotCellType',
+        '5': 'annotAnatomy',
+        '6': 'annotSpecies'
+      }
+
+      var editedIRs = [];
+
+      for (var j = 0; j < irList.length; j++) {
+        for (var i = 0; i < data.length; i++) {
+            srValue = data[i];
+            irField = srDataIndexToIRFieldMap[i];
+            if (srValue != "") {
+              summaryRecords[srIndex]['individualRecords'][j][irField] = srValue;
+            }
+        }
+        editedIR = summaryRecords[srIndex]['individualRecords'][j];
+        editedIRs.push(editedIR);
+      }
+
+      console.log(editedIRs)
+
+      editedIRs = JSON.stringify(editedIRs);
+
+      $.ajax({
+        'url': '/records/',
+        'type': 'POST',
+        'data': {'records': editedIRs}
+      });
+
+    }
+
   })
 })
