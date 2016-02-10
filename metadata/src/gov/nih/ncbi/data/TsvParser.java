@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 /**
  * 
  * @author Lena Pons
@@ -34,8 +35,13 @@ public class TsvParser {
 		String [] fields = readLine.split("\t");
 		for (int i = 0; i < fields.length; i ++) {
 			headers.put(fields[i], i);
+			System.out.println(fields[i]);
 		}
 		
+	}
+	
+	public Set<String> getHeaders() {
+		return headers.keySet();
 	}
 	/**
 	 * flag for iterating over the tsv file
@@ -56,7 +62,11 @@ public class TsvParser {
 	 * @return value contained in the file in that column
 	 */
 	public String get(String header) {
-		return dataArray[headers.get(header)];
+		try {
+			return dataArray[headers.get(header)];
+		} catch (Exception e) {
+			return null;
+		}
 	}
 	
 	public void close() throws IOException {
