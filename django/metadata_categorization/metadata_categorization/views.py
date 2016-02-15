@@ -36,8 +36,8 @@ class QueueView(generic.TemplateView):
             "sourceCellTreatment": "",
             "sourceAnatomy": "",
             "sourceTreatment": "",
-            "sourceSpecies": ""#,
-            #"sourceDisease": ""
+            "sourceSpecies": "",
+            "sourceDisease": ""
         }
 
         annotFields = {
@@ -46,8 +46,8 @@ class QueueView(generic.TemplateView):
             "annotCellTreatment": "",
             "annotAnatomy": "",
             "annotSpecies": "",
-            "annotSpecies": ""#,
-            #"annotDisease": ""
+            "annotSpecies": "",
+            "annotDisease": ""
         }
 
         summaryRecords = []
@@ -65,8 +65,8 @@ class QueueView(generic.TemplateView):
         for i, individualRecord in enumerate(individualRecords):
             tmpIR = {}
             for field in individualRecord:
-                if field == 'sourceDisease' or field == 'annotDisease':
-                    continue
+                #if field == 'sourceDisease' or field == 'annotDisease':
+                #    continue
                 thisField = individualRecord[field]
                 tmpIR[field] = thisField
                 if thisField == '0' or thisField == "   ":
@@ -149,7 +149,7 @@ class QueueView(generic.TemplateView):
 
         # Call Solr
         #solr_host = "http://localhost:8983/solr/AnnotationsDev"
-        solr_host = "http://localhost:8983/solr/annotation"
+        solr_host = "http://localhost:8983/solr/AnnotationsDev"
 
         # %3A is :
         # sampleName%3A* is sampleName:*"
@@ -221,7 +221,7 @@ class RecordView(generic.TemplateView):
         # POST request body, representing an edited individual record
         body = str(records).encode('utf-8')
 
-        solr_host = "http://localhost:8983/solr/annotation"
+        solr_host = "http://localhost:8983/solr/AnnotationsDev"
         url = solr_host + "/update?commit=true"
 
         # Example POST to update part of a Solr document in "annotation" core:
