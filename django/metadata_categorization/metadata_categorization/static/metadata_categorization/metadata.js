@@ -115,7 +115,7 @@ plusEditor.prototype.prepare = function(row, col, prop, td, originalValue, cellP
     contextMenu: true,
     colWidths: [, , , , , , ],
     colHeaders: [
-      "BioSample ID", "Source cell line", "Cell line", "Cell type", "Tissue",
+      "BioSample ID", "Source cell line", "Cell line", "Cell type", "Anatomy",
       "Species", "Disease"
     ],
     columns: [
@@ -195,7 +195,7 @@ $(document).ready(function() {
     contextMenu: true,
     colWidths: [7, 10, , , , , ,],
     colHeaders: [
-      "", "#", "Source cell line", "Cell line", "Cell type", "Tissue",
+      "", "#", "Source cell line", "Cell line", "Cell type", "Anatomy",
       "Species", "Disease"
     ],
     columns: [

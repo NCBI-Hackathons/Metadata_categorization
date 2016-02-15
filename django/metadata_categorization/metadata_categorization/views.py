@@ -149,7 +149,7 @@ class QueueView(generic.TemplateView):
 
         # Call Solr
         #solr_host = "http://localhost:8983/solr/AnnotationsDev"
-        solr_host = "http://localhost:8983/solr/AnnotationsDev"
+        solr_host = "http://localhost:8983/solr/annotation"
 
         # %3A is :
         # sampleName%3A* is sampleName:*"
@@ -221,7 +221,7 @@ class RecordView(generic.TemplateView):
         # POST request body, representing an edited individual record
         body = str(records).encode('utf-8')
 
-        solr_host = "http://localhost:8983/solr/AnnotationsDev"
+        solr_host = "http://localhost:8983/solr/annotation"
         url = solr_host + "/update?commit=true"
 
         # Example POST to update part of a Solr document in "annotation" core:
