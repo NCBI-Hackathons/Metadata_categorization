@@ -15,7 +15,7 @@ class IndexView(generic.TemplateView):
 class QueueView(generic.TemplateView):
     template_name = 'metadata_categorization/queue.html'
 
-    def getSummaryRecords(self, individualRecords):
+    def get_summary_records(self, individual_records):
         """
         Aggregates individual Biosample (SRA or GEO) records into
         "summary records" shown as top-level table rows in the UI.  Individual
@@ -30,7 +30,7 @@ class QueueView(generic.TemplateView):
         so we're doing it in the web tier.
         """
 
-        sourceFields = {
+        source_fields = {
             "sourceCellLine": "",
             "sourceCellType": "",
             "sourceCellTreatment": "",
@@ -40,7 +40,7 @@ class QueueView(generic.TemplateView):
             "sourceDisease": ""
         }
 
-        annotFields = {
+        annot_fields = {
             "annotCellLine": "",
             "annotCellType": "",
             "annotCellTreatment": "",
@@ -50,96 +50,96 @@ class QueueView(generic.TemplateView):
             "annotDisease": ""
         }
 
-        summaryRecords = []
+        summary_records = []
 
-        summaryRecord = {"individualRecords": []}
-        summaryRecord.update(sourceFields)
-        summaryRecord.update(annotFields)
+        summary_record = {"individual_records": []}
+        summary_record.update(source_fields)
+        summary_record.update(annot_fields)
 
-        individualRecords = sorted(
-                        individualRecords,
+        individual_records = sorted(
+                        individual_records,
                         key=lambda k: k['sourceCellLine']
                     )
 
-        tmpIRs = []
-        for i, individualRecord in enumerate(individualRecords):
-            tmpIR = {}
-            for field in individualRecord:
+        tmp_IRs = []
+        s = []
+        for i, individual_record in enumerate(individual_records):
+            tmp_IR = {}
+            for field in individual_record:
                 #if field == 'sourceDisease' or field == 'annotDisease':
                 #    continue
-                thisField = individualRecord[field]
-                tmpIR[field] = thisField
-                if thisField == '0' or thisField == "   ":
-                    individualRecords[i][field] = ""
-                    individualRecord[field] = ""
-                    tmpIR[field] = ""
+                this_field = individual_record[field]
+                tmp_IR[field] = this_field
+                if this_field == '0' or this_field == "   ":
+                    individual_records[i][field] = ""
+                    individual_record[field] = ""
+                    tmp_IR[field] = ""
 
-            individualRecord = tmpIR
-            tmpIRs.append(individualRecord)
+            individual_record = tmp_IR
+            tmp_IRs.append(individual_record)
 
-        individualRecords = tmpIRs
+        individual_records = tmp_IRs
 
-        for i, individualRecord in enumerate(individualRecords):
-            if "sourceCellLine" not in individualRecord:
-                print('"sourceCellLine" not in individualRecord')
-                individualRecords[i]["sourceCellLine"] = ""
+        for i, individual_record in enumerate(individual_records):
+            if "sourceCellLine" not in individual_record:
+                individual_records[i]["sourceCellLine"] = ""
 
-            cellLine = individualRecords[i]["sourceCellLine"]
+            cellLine = individual_records[i]["sourceCellLine"]
 
-            prevCellLine = individualRecords[i-1]["sourceCellLine"]
+            prev_cell_line = individual_records[i-1]["sourceCellLine"]
 
-            if cellLine == prevCellLine or i == 0:
-                summaryRecord["individualRecords"].append(individualRecord)
+            if cellLine == prev_cell_line or i == 0:
+                summary_record["individual_records"].append(individual_record)
             else:
-                recordsCount = summaryRecord["individualRecords"]
-                summaryRecord['recordsCount'] = len(recordsCount)
+                recordsCount = summary_record["individual_records"]
+                summary_record['recordsCount'] = len(recordsCount)
 
-                if len(summaryRecord["individualRecords"]) > 0:
-                    summaryRecord['sourceCellLine'] = prevCellLine
+                if len(summary_record["individual_records"]) > 0:
+                    summary_record['sourceCellLine'] = prev_cell_line
 
-                summaryRecords.append(summaryRecord)
-                summaryRecord = {
-                    "individualRecords": [individualRecord],
+                summary_records.append(summary_record)
+                summary_record = {
+                    "individual_records": [individual_record],
                     "index": i
                 }
-                summaryRecord.update(sourceFields)
-                summaryRecord.update(annotFields)
+                summary_record.update(source_fields)
+                summary_record.update(annot_fields)
 
-        newSRs = []
-        for i, summaryRecord in enumerate(summaryRecords):
-            prevFields = {}
-            newSR = summaryRecord
-            individualRecords = summaryRecord['individualRecords']
+        new_SRs = []
+        for i, summary_record in enumerate(summary_records):
+            prev_fields = {}
+            new_SR = summary_record
+            individual_records = summary_record['individual_records']
 
-            if len(individualRecords) == 1:
-                newSR.update(individualRecords[0])
-                newSRs.append(newSR)
+            if len(individual_records) == 1:
+                new_SR.update(individual_records[0])
+                new_SRs.append(new_SR)
                 continue
 
-            for j, individualRecord in enumerate(individualRecords):
-                for field in individualRecord:
+            for j, individual_record in enumerate(individual_records):
+                for field in individual_record:
                     if j == 0:
-                        prevFields[field] = individualRecord[field]
+                        prev_fields[field] = individual_record[field]
                     else:
                         if (
-                            prevFields[field] != "" and
-                            prevFields[field] == individualRecord[field]
+                            prev_fields[field] != "" and
+                            prev_fields[field] == individual_record[field]
                         ):
-                            newSR[field] = prevFields[field]
+                            new_SR[field] = prev_fields[field]
                         else:
-                            newSR[field] = ""
-            newSRs.append(newSR)
-        summaryRecords = newSRs
+                            new_SR[field] = ""
+            new_SRs.append(new_SR)
+        summary_records = new_SRs
 
-        return summaryRecords
+        return summary_records
 
     # curationQueue
     # ID
-    # list summaryRecord
-    # summaryRecord
+    # list summary_record
+    # summary_record
     # list indivdualRecord
     # list
-    # individualRecord term|cell line|cell type|anatomy|species|disease|note
+    # individual_record term|cell line|cell type|anatomy|species|disease|note
     def get_context_data(self, queueId, **kwargs):
 
         context = super(QueueView, self).get_context_data()
@@ -169,26 +169,26 @@ class QueueView(generic.TemplateView):
 
         #print(solr_data)
 
-        context['solr_data'] = self.getSummaryRecords(solr_data)
+        context['solr_data'] = self.get_summary_records(solr_data)
 
-        summaryRecords = self.getSummaryRecords(solr_data)
+        summary_records = self.get_summary_records(solr_data)
 
         '''
         # TODO
         # There's a bug in the summary sourceCellLine
         # Remove this hack once fixed
         tmp = []
-        for summaryRecord in summaryRecords:
-            if summaryRecord['sourceCellLine'] != '':
-                tmp.append(summaryRecord)
-        summaryRecords = tmp
+        for summary_record in summary_records:
+            if summary_record['sourceCellLine'] != '':
+                tmp.append(summary_record)
+        summary_records = tmp
         '''
 
         # Demo'd URL:
         # http://localhost:8000/queue/6
 
         context["id"] = queueId
-        context["summaryRecords"] = summaryRecords
+        context["summary_records"] = summary_records
 
         return context
 
