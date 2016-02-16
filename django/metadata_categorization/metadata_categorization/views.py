@@ -31,28 +31,37 @@ class QueueView(generic.TemplateView):
         """
 
         source_fields = {
+            "sampleName": "",
+            "sampleTitle": "",
             "sourceCellLine": "",
             "sourceCellType": "",
             "sourceCellTreatment": "",
+            "sourceDevStage": "",
+            "sourceSex": "",
             "sourceAnatomy": "",
-            "sourceTreatment": "",
             "sourceSpecies": "",
-            "sourceDisease": ""
+            "sourceDisease": "",
+            "note": ""
         }
 
         annot_fields = {
+            "sampleName": "",
+            "sampleTitle": "",
             "annotCellLine": "",
             "annotCellType": "",
             "annotCellTreatment": "",
+            "annotDevStage": "",
+            "annotSex": "",
             "annotAnatomy": "",
             "annotSpecies": "",
             "annotSpecies": "",
-            "annotDisease": ""
+            "annotDisease": "",
+            "note": ""
         }
 
         summary_records = []
 
-        summary_record = {"individual_records": []}
+        summary_record = {"individualRecords": []}
         summary_record.update(source_fields)
         summary_record.update(annot_fields)
 
@@ -89,17 +98,17 @@ class QueueView(generic.TemplateView):
             prev_cell_line = individual_records[i-1]["sourceCellLine"]
 
             if cellLine == prev_cell_line or i == 0:
-                summary_record["individual_records"].append(individual_record)
+                summary_record["individualRecords"].append(individual_record)
             else:
-                recordsCount = summary_record["individual_records"]
+                recordsCount = summary_record["individualRecords"]
                 summary_record['recordsCount'] = len(recordsCount)
 
-                if len(summary_record["individual_records"]) > 0:
+                if len(summary_record["individualRecords"]) > 0:
                     summary_record['sourceCellLine'] = prev_cell_line
 
                 summary_records.append(summary_record)
                 summary_record = {
-                    "individual_records": [individual_record],
+                    "individualRecords": [individual_record],
                     "index": i
                 }
                 summary_record.update(source_fields)
@@ -109,7 +118,7 @@ class QueueView(generic.TemplateView):
         for i, summary_record in enumerate(summary_records):
             prev_fields = {}
             new_SR = summary_record
-            individual_records = summary_record['individual_records']
+            individual_records = summary_record['individualRecords']
 
             if len(individual_records) == 1:
                 new_SR.update(individual_records[0])

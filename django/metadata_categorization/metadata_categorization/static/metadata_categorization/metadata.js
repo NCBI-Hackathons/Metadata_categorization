@@ -115,17 +115,24 @@ plusEditor.prototype.prepare = function(row, col, prop, td, originalValue, cellP
     contextMenu: true,
     colWidths: [, , , , , , ],
     colHeaders: [
-      "BioSample ID", "Source cell line", "Cell line", "Cell type", "Anatomy",
-      "Species", "Disease"
+      "BioSample ID", "Source cell line*", "Cell line*", "Cell type",
+      "Treatment", "Anatomy", "Dev. state", "Sex",
+      //"Disease*",
+      "Species",
+      "Note"
     ],
     columns: [
       {data: "id", readOnly: true, renderer: renderBiosampleId},
       {data: "sourceCellLine"},
       {data: "annotCellLine", renderer: renderIRSourceOrAnnot},
       {data: "annotCellType", renderer: renderIRSourceOrAnnot},
+      {data: "annotCellTreatment", renderer: renderIRSourceOrAnnot},
       {data: "annotAnatomy", renderer: renderIRSourceOrAnnot},
+      {data: "annotDevStage", renderer: renderIRSourceOrAnnot},
+      {data: "annotSex", renderer: renderIRSourceOrAnnot},
+      //{data: "annotDisease", renderer: renderIRSourceOrAnnot},
       {data: "annotSpecies", renderer: renderIRSourceOrAnnot},
-      {data: "annotDisease", renderer: renderIRSourceOrAnnot},
+      {data: "note"}
     ],
     afterInit: function() {
       currentSR = summaryRecords[srIndex];
@@ -167,7 +174,7 @@ plusEditor.prototype.prepare = function(row, col, prop, td, originalValue, cellP
   $('#irDialog').dialog({
     title: 'Edit individual records',
     height: dialogHeight,
-    width: 950,
+    width: 1300,
     modal: true,
     create: function(event, ui) {
       // Fix minor UI artifacts
@@ -195,8 +202,8 @@ $(document).ready(function() {
     contextMenu: true,
     colWidths: [7, 10, , , , , ,],
     colHeaders: [
-      "", "#", "Source cell line", "Cell line", "Cell type", "Anatomy",
-      "Species", "Disease"
+      "", "#", "Source cell line*", "Cell line*", "Cell type", "Anatomy",
+      "Species", "Note"//, "Disease*"
     ],
     columns: [
       {
@@ -209,7 +216,9 @@ $(document).ready(function() {
       {data: "annotCellType", renderer: renderSourceOrAnnot},
       {data: "annotAnatomy", renderer: renderSourceOrAnnot},
       {data: "annotSpecies", renderer: renderSourceOrAnnot},
-      {data: "annotDisease", renderer: renderSourceOrAnnot}
+      {data: "note"}
+      //,
+      //{data: "annotDisease", renderer: renderSourceOrAnnot}
     ],
     afterChange: function (change, source) {
       if (source === 'loadData' || source === 'external') {
