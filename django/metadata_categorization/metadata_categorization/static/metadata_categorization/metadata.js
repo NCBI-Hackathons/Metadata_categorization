@@ -115,22 +115,26 @@ plusEditor.prototype.prepare = function(row, col, prop, td, originalValue, cellP
     contextMenu: true,
     colWidths: [, , , , , , ],
     colHeaders: [
-      "BioSample ID", "Source cell line*", "Cell line*", "Cell type",
-      "Treatment", "Anatomy", "Dev. state", "Sex",
-      //"Disease*",
+      "BioSample ID",
+      "Source cell line*", "Sample name", "Sample title",
+      "Cell line*", "Cell type",
+      "Treatment", "Anatomy", "Dev. stage", "Sex",
+      "Disease*",
       "Species",
       "Note"
     ],
     columns: [
       {data: "id", readOnly: true, renderer: renderBiosampleId},
       {data: "sourceCellLine"},
+      {data: "sampleName"},
+      {data: "sampleTitle"},
       {data: "annotCellLine", renderer: renderIRSourceOrAnnot},
       {data: "annotCellType", renderer: renderIRSourceOrAnnot},
       {data: "annotCellTreatment", renderer: renderIRSourceOrAnnot},
       {data: "annotAnatomy", renderer: renderIRSourceOrAnnot},
       {data: "annotDevStage", renderer: renderIRSourceOrAnnot},
       {data: "annotSex", renderer: renderIRSourceOrAnnot},
-      //{data: "annotDisease", renderer: renderIRSourceOrAnnot},
+      {data: "annotDisease", renderer: renderIRSourceOrAnnot},
       {data: "annotSpecies", renderer: renderIRSourceOrAnnot},
       {data: "note"}
     ],
@@ -152,10 +156,15 @@ plusEditor.prototype.prepare = function(row, col, prop, td, originalValue, cellP
       var editedIndividualRecord = {
         'id': id,
         //'sourceCellLine': data[1],
-        'annotCellLine': data[2],
-        'annotCellType': data[3],
-        'annotAnatomy': data[4],
-        'annotSpecies': data[5]
+        'annotCellLine': data[4],
+        'annotCellType': data[5],
+        'annotCellTreatment': data[6],
+        'annotAnatomy': data[7],
+        'annotDevStage': data[8],
+        'annotSex': data[9],
+        'annotSpecies': data[10],
+        'annotDisease': data[11],
+        'note': data[12]
       };
 
       summaryRecords[srIndex][irIndex] = editedIndividualRecord;
@@ -170,11 +179,12 @@ plusEditor.prototype.prepare = function(row, col, prop, td, originalValue, cellP
   })
 
   var dialogHeight = window.innerHeight - 200;
+  var dialogWidth = window.innerWidth - 50;
 
   $('#irDialog').dialog({
     title: 'Edit individual records',
     height: dialogHeight,
-    width: 1300,
+    width: dialogWidth,
     modal: true,
     create: function(event, ui) {
       // Fix minor UI artifacts
@@ -203,7 +213,7 @@ $(document).ready(function() {
     colWidths: [7, 10, , , , , ,],
     colHeaders: [
       "", "#", "Source cell line*", "Cell line*", "Cell type", "Anatomy",
-      "Species", "Note"//, "Disease*"
+      "Species", "Disease*", "Note"
     ],
     columns: [
       {
@@ -216,9 +226,8 @@ $(document).ready(function() {
       {data: "annotCellType", renderer: renderSourceOrAnnot},
       {data: "annotAnatomy", renderer: renderSourceOrAnnot},
       {data: "annotSpecies", renderer: renderSourceOrAnnot},
+      {data: "annotDisease", renderer: renderSourceOrAnnot},
       {data: "note"}
-      //,
-      //{data: "annotDisease", renderer: renderSourceOrAnnot}
     ],
     afterChange: function (change, source) {
       if (source === 'loadData' || source === 'external') {
@@ -247,14 +256,18 @@ $(document).ready(function() {
         'annotCellLine': data[2],
         'annotCellType': data[3],
         'annotAnatomy': data[4],
-        'annotSpecies': data[5]
+        'annotSpecies': data[5],
+        'annotDisease': data[6],
+        'note': data[7]
       };
 
       var srDataIndexToIRFieldMap = {
         '3': 'annotCellLine',
         '4': 'annotCellType',
         '5': 'annotAnatomy',
-        '6': 'annotSpecies'
+        '6': 'annotSpecies',
+        '7': 'annotDisease',
+        '8': 'note'
       }
 
       var editedIRs = [];

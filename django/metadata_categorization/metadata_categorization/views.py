@@ -204,15 +204,27 @@ class QueueView(generic.TemplateView):
 
 class RecordView(generic.TemplateView):
 
-    def transform_record(self, id, data):
+    def transform_record(self, id, data, is_summary):
         # Transforms data to record format used by this app's Solr core
 
-        record = {
-            'annotCellLine': data['annotCellLine'],
-            'annotCellType': data['annotCellType'],
-            'annotAnatomy': data['annotAnatomy'],
-            'annotSpecies': data['annotSpecies'],
-        }
+        if is_summary:
+            record = {
+                'annotCellLine': data['annotCellLine'],
+                'annotCellType': data['annotCellType'],
+                'annotAnatomy': data['annotAnatomy'],
+                'annotSpecies': data['annotSpecies'],
+                'note': data['note']
+            }
+        else:
+            record = {
+                'annotCellLine': data['annotCellLine'],
+                'annotCellType': data['annotCellType'],
+                'annotCellTreatment': data['annotCellTreatment'],
+                'annotAnatomy': data['annotAnatomy'],
+                'annotSpecies': data['annotSpecies'],
+                'annotDisease': data['annotDisease'],
+                'note': data['note']
+            }
 
         nr = {'id': id} # new record
         for key in record:
@@ -231,6 +243,7 @@ class RecordView(generic.TemplateView):
         body = str(records).encode('utf-8')
 
         solr_host = "http://localhost:8983/solr/annotation"
+        #solr_host = "http://localhost:8983/solr/AnnotationsDev"
         url = solr_host + "/update?commit=true"
 
         # Example POST to update part of a Solr document in "annotation" core:
@@ -251,7 +264,7 @@ class RecordView(generic.TemplateView):
         id = kwargs['recordId']
 
         data = json.loads(data['records'])
-        record = self.transform_record(id, data)
+        record = self.transform_record(id, data, False)
         record = [record]
 
         self.update_solr(record)
@@ -269,7 +282,7 @@ class RecordsView(RecordView):
         transformed_records = []
         for record in records:
             id = record['id']
-            transformed_record = self.transform_record(id, record)
+            transformed_record = self.transform_record(id, record, True)
             transformed_records.append(transformed_record)
 
         self.update_solr(transformed_records)
