@@ -26,6 +26,12 @@
   <div id="irDialog" class="hidden">
     <div id="irContainer"></div>
   </div>
+  <p>
+    * "Source cell line" and "Cell line" are one of "Cell line", "Sample name",
+    "Sample title", or "Experiment title" in the underlying BioSample XML data.
+     "Disease" is one of "Disease", "Health state", or "Phenotype".
+     <a target="_blank" href="https://github.com/NCBI-Hackathons/Metadata_categorization/blob/master/metadata/src/gov/nih/ncbi/solr/PopulateRecordsJob.java">Source</a>.
+  </p>
   {% csrf_token %}
 </body>
 </html>
