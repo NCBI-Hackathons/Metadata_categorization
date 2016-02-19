@@ -179,7 +179,7 @@ $(document).ready(function() {
 
   var container = document.getElementById("queue");
 
-  var queueHeight = window.innerHeight - 140;
+  var queueHeight = window.innerHeight - 160;
 
   var queue = new Handsontable(container, {
     data: summaryRecords,
