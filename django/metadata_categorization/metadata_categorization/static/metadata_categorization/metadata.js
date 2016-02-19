@@ -13,34 +13,12 @@ $.ajaxSetup({
     }
 });
 
-function biosampleAccToId(biosampleAcc) {
-  // Converts BioSample accession to individual record ID
-  // BioSample accessions have the form "SAMN" + 8 digits
-  // E.g. SAMN02730062 -> 2730062
-  var id = biosampleAcc.split(/SAMN[0]+/)[1];
-
-  return id;
-}
-
-function idToBiosampleAcc(id) {
-  // Converts individual record ID to BioSample accession
-  // BioSample accessions have the form "SAMN" + 8 digits
-  // E.g. 2730062 -> SAMN02730062
-  var id = "" + id, // cast int to string
-      leadingZeros = Array(8 - id.length + 1).join("0"),
-      biosampleAcc = "SAMN" + leadingZeros + id;
-
-  return biosampleAcc;
-}
-
 function renderBiosampleId(instance, td, row, col, prop, value, cellProperties) {
 
-  var biosampleAcc = idToBiosampleAcc(value);
-
-  var href = "https://www.ncbi.nlm.nih.gov/biosample/" + biosampleAcc,
+  var href = "https://www.ncbi.nlm.nih.gov/biosample/" + value,
       title = "View full BioSample record"
       link = '<a href="' + href + '" target="blank" title="' + title + '">' +
-        biosampleAcc + '</a>';
+        value + '</a>';
 
   $(td).html(link);
 }
