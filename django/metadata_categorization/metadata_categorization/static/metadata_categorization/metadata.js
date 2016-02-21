@@ -265,8 +265,6 @@ $(document).ready(function() {
         editedIRs.push(editedIR);
       }
 
-      console.log(editedIRs)
-
       editedIRs = JSON.stringify(editedIRs);
 
       $.ajax({
