@@ -91,7 +91,7 @@ plusEditor.prototype.prepare = function(row, col, prop, td, originalValue, cellP
     sortIndicator: true,
     columnSorting: true,
     contextMenu: true,
-    colWidths: [, , , , , , ],
+    colWidths: [43, , , , , , , , , 25, , , ],
     colHeaders: [
       'BioSample ID',
       'Source cell line*', 'Sample name', 'Sample title',
@@ -188,7 +188,7 @@ $(document).ready(function() {
     sortIndicator: true,
     columnSorting: true,
     contextMenu: true,
-    colWidths: [7, 10, , , , , ,],
+    colWidths: [7, 10, , , , , 40,],
     colHeaders: [
       '', '#', 'Source cell line*', 'Cell line*', 'Cell type', 'Anatomy',
       'Species', 'Disease*', 'Note'
