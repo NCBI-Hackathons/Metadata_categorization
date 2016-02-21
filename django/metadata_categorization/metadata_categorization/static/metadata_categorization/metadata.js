@@ -8,15 +8,15 @@ $.ajaxSetup({
     beforeSend: function(xhr, settings) {
         if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
             var csrftoken = Cookies.get('csrftoken');
-            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            xhr.setRequestHeader('X-CSRFToken', csrftoken);
         }
     }
 });
 
 function renderBiosampleId(instance, td, row, col, prop, value, cellProperties) {
 
-  var href = "https://www.ncbi.nlm.nih.gov/biosample/" + value,
-      title = "View full BioSample record"
+  var href = 'https://www.ncbi.nlm.nih.gov/biosample/' + value,
+      title = 'View full BioSample record'
       link = '<a href="' + href + '" target="blank" title="' + title + '">' +
         value + '</a>';
 
@@ -80,9 +80,9 @@ plusEditor.prototype.prepare = function(row, col, prop, td, originalValue, cellP
   var rowIndex = cellProperties.physicalRow, // current row index (perhaps after custom sorting)
       srIndex = cellProperties.row, // original summary record index
       summaryRecord = summaryRecords[srIndex],
-      individualRecords = summaryRecord["individualRecords"],
-      sourceCellLine = summaryRecord["sourceCellLine"],
-      irContainer = document.getElementById("irContainer");
+      individualRecords = summaryRecord['individualRecords'],
+      sourceCellLine = summaryRecord['sourceCellLine'],
+      irContainer = document.getElementById('irContainer');
 
   var irQueue = new Handsontable(irContainer, {
     data: individualRecords,
@@ -93,28 +93,28 @@ plusEditor.prototype.prepare = function(row, col, prop, td, originalValue, cellP
     contextMenu: true,
     colWidths: [, , , , , , ],
     colHeaders: [
-      "BioSample ID",
-      "Source cell line*", "Sample name", "Sample title",
-      "Cell line*", "Cell type",
-      "Treatment", "Anatomy", "Dev. stage", "Sex",
-      "Disease*",
-      "Species",
-      "Note"
+      'BioSample ID',
+      'Source cell line*', 'Sample name', 'Sample title',
+      'Cell line*', 'Cell type',
+      'Treatment', 'Anatomy', 'Dev. stage', 'Sex',
+      'Disease*',
+      'Species',
+      'Note'
     ],
     columns: [
-      {data: "id", readOnly: true, renderer: renderBiosampleId},
-      {data: "sourceCellLine"},
-      {data: "sampleName"},
-      {data: "sampleTitle"},
-      {data: "annotCellLine", renderer: renderIRSourceOrAnnot},
-      {data: "annotCellType", renderer: renderIRSourceOrAnnot},
-      {data: "annotCellTreatment", renderer: renderIRSourceOrAnnot},
-      {data: "annotAnatomy", renderer: renderIRSourceOrAnnot},
-      {data: "annotDevStage", renderer: renderIRSourceOrAnnot},
-      {data: "annotSex", renderer: renderIRSourceOrAnnot},
-      {data: "annotDisease", renderer: renderIRSourceOrAnnot},
-      {data: "annotSpecies", renderer: renderIRSourceOrAnnot},
-      {data: "note"}
+      {data: 'id', readOnly: true, renderer: renderBiosampleId},
+      {data: 'sourceCellLine'},
+      {data: 'sampleName'},
+      {data: 'sampleTitle'},
+      {data: 'annotCellLine', renderer: renderIRSourceOrAnnot},
+      {data: 'annotCellType', renderer: renderIRSourceOrAnnot},
+      {data: 'annotCellTreatment', renderer: renderIRSourceOrAnnot},
+      {data: 'annotAnatomy', renderer: renderIRSourceOrAnnot},
+      {data: 'annotDevStage', renderer: renderIRSourceOrAnnot},
+      {data: 'annotSex', renderer: renderIRSourceOrAnnot},
+      {data: 'annotDisease', renderer: renderIRSourceOrAnnot},
+      {data: 'annotSpecies', renderer: renderIRSourceOrAnnot},
+      {data: 'note'}
     ],
     afterInit: function() {
       currentSR = summaryRecords[srIndex];
@@ -177,7 +177,7 @@ plusEditor.prototype.prepare = function(row, col, prop, td, originalValue, cellP
 
 $(document).ready(function() {
 
-  var container = document.getElementById("queue");
+  var container = document.getElementById('queue');
 
   var queueHeight = window.innerHeight - 160;
 
@@ -190,22 +190,22 @@ $(document).ready(function() {
     contextMenu: true,
     colWidths: [7, 10, , , , , ,],
     colHeaders: [
-      "", "#", "Source cell line*", "Cell line*", "Cell type", "Anatomy",
-      "Species", "Disease*", "Note"
+      '', '#', 'Source cell line*', 'Cell line*', 'Cell type', 'Anatomy',
+      'Species', 'Disease*', 'Note'
     ],
     columns: [
       {
-        data: "", disableVisualSelection: true, editor: plusEditor,
+        data: '', disableVisualSelection: true, editor: plusEditor,
         renderer: renderPlus,
       },
-      {data: "recordsCount", readOnly: true},
-      {data: "sourceCellLine"},
-      {data: "annotCellLine", renderer: renderSourceOrAnnot},
-      {data: "annotCellType", renderer: renderSourceOrAnnot},
-      {data: "annotAnatomy", renderer: renderSourceOrAnnot},
-      {data: "annotSpecies", renderer: renderSourceOrAnnot},
-      {data: "annotDisease", renderer: renderSourceOrAnnot},
-      {data: "note"}
+      {data: 'recordsCount', readOnly: true},
+      {data: 'sourceCellLine'},
+      {data: 'annotCellLine', renderer: renderSourceOrAnnot},
+      {data: 'annotCellType', renderer: renderSourceOrAnnot},
+      {data: 'annotAnatomy', renderer: renderSourceOrAnnot},
+      {data: 'annotSpecies', renderer: renderSourceOrAnnot},
+      {data: 'annotDisease', renderer: renderSourceOrAnnot},
+      {data: 'note'}
     ],
     afterChange: function (change, source) {
       if (source === 'loadData' || source === 'external') {
@@ -254,7 +254,7 @@ $(document).ready(function() {
         for (var i = 0; i < data.length; i++) {
             srValue = data[i];
             irField = srDataIndexToIRFieldMap[i];
-            if (srValue != "") {
+            if (srValue != '') {
               summaryRecords[srIndex]['individualRecords'][j][irField] = srValue;
             }
         }
