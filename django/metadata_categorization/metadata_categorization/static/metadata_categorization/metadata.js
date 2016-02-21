@@ -1,4 +1,5 @@
 var currentSR;
+var dialogHeight;
 
 function csrfSafeMethod(method) {
     // these HTTP methods do not require CSRF protection
@@ -84,21 +85,26 @@ plusEditor.prototype.prepare = function(row, col, prop, td, originalValue, cellP
       sourceCellLine = summaryRecord['sourceCellLine'],
       irContainer = document.getElementById('irContainer');
 
+
+  dialogHeight = window.innerHeight - 200;
+  var dialogWidth = window.innerWidth - 50;
+  var tableHeight = dialogHeight - 100;
+
   var irQueue = new Handsontable(irContainer, {
     data: individualRecords,
-    height: 300,
+    height: tableHeight,
     stretchH: 'all',
     sortIndicator: true,
     columnSorting: true,
     contextMenu: true,
-    colWidths: [43, , , , , , , , , 25, , , ],
+    colWidths: [30, , , , , , , , , 25, , , ],
     colHeaders: [
-      'BioSample ID',
+      'ID',
       'Source cell line*', 'Sample name', 'Sample title',
       'Cell line*', 'Cell type',
       'Treatment', 'Anatomy', 'Dev. stage', 'Sex',
-      'Disease*',
       'Species',
+      'Disease*',
       'Note'
     ],
     columns: [
@@ -112,8 +118,8 @@ plusEditor.prototype.prepare = function(row, col, prop, td, originalValue, cellP
       {data: 'annotAnatomy', renderer: renderIRSourceOrAnnot},
       {data: 'annotDevStage', renderer: renderIRSourceOrAnnot},
       {data: 'annotSex', renderer: renderIRSourceOrAnnot},
-      {data: 'annotDisease', renderer: renderIRSourceOrAnnot},
       {data: 'annotSpecies', renderer: renderIRSourceOrAnnot},
+      {data: 'annotDisease', renderer: renderIRSourceOrAnnot},
       {data: 'note'}
     ],
     afterInit: function() {
@@ -156,11 +162,8 @@ plusEditor.prototype.prepare = function(row, col, prop, td, originalValue, cellP
     }
   })
 
-  var dialogHeight = window.innerHeight - 200;
-  var dialogWidth = window.innerWidth - 50;
-
   $('#irDialog').dialog({
-    title: 'Edit individual records',
+    title: 'Edit individual BioSample records',
     height: dialogHeight,
     width: dialogWidth,
     modal: true,
