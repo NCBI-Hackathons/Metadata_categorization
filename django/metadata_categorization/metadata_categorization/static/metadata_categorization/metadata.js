@@ -87,7 +87,7 @@ plusEditor.prototype.prepare = function(row, col, prop, td, originalValue, cellP
 
 
   dialogHeight = window.innerHeight - 200;
-  var dialogWidth = window.innerWidth - 50;
+  var dialogWidth = window.innerWidth - 20;
   var tableHeight = dialogHeight - 100;
 
   var irQueue = new Handsontable(irContainer, {
@@ -97,13 +97,13 @@ plusEditor.prototype.prepare = function(row, col, prop, td, originalValue, cellP
     sortIndicator: true,
     columnSorting: true,
     contextMenu: true,
-    colWidths: [30, , , , , , , , , 25, , , ],
+    colWidths: [40, , , , , , , , , , 25, , ],
     colHeaders: [
       'ID',
       'Source cell line*', 'Sample name', 'Sample title',
       'Cell line*', 'Cell type',
-      'Treatment', 'Anatomy', 'Dev. stage', 'Sex',
-      'Species',
+      'Treatment', 'Anatomy', 'Harvest site',
+      'Dev. stage', 'Sex', 'Species',
       'Disease*',
       'Note'
     ],
@@ -116,6 +116,7 @@ plusEditor.prototype.prepare = function(row, col, prop, td, originalValue, cellP
       {data: 'annotCellType', renderer: renderIRSourceOrAnnot},
       {data: 'annotCellTreatment', renderer: renderIRSourceOrAnnot},
       {data: 'annotAnatomy', renderer: renderIRSourceOrAnnot},
+      {data: 'harvestSite'},
       {data: 'annotDevStage', renderer: renderIRSourceOrAnnot},
       {data: 'annotSex', renderer: renderIRSourceOrAnnot},
       {data: 'annotSpecies', renderer: renderIRSourceOrAnnot},
@@ -144,11 +145,12 @@ plusEditor.prototype.prepare = function(row, col, prop, td, originalValue, cellP
         'annotCellType': data[5],
         'annotCellTreatment': data[6],
         'annotAnatomy': data[7],
-        'annotDevStage': data[8],
-        'annotSex': data[9],
-        'annotSpecies': data[10],
-        'annotDisease': data[11],
-        'note': data[12]
+        'harvestSite': data[8],
+        'annotDevStage': data[9],
+        'annotSex': data[10],
+        'annotSpecies': data[11],
+        'annotDisease': data[12],
+        'note': data[13]
       };
 
       summaryRecords[srIndex][irIndex] = editedIndividualRecord;
@@ -184,7 +186,7 @@ $(document).ready(function() {
 
   var queueHeight = window.innerHeight - 160;
 
-  var queue = new Handsontable(container, {
+  queue = new Handsontable(container, {
     data: summaryRecords,
     height: queueHeight,
     stretchH: 'all',
@@ -210,10 +212,17 @@ $(document).ready(function() {
       {data: 'annotDisease', renderer: renderSourceOrAnnot},
       {data: 'note'}
     ],
-    afterChange: function (change, source) {
+    // Work in progress for issue 23 (slow editing)
+    //beforeChange: function(change, source) {
+    //  console.log(this);
+    //  this.pauseObservingChanges();
+    //},
+    afterChange: function(change, source) {
       if (source === 'loadData' || source === 'external') {
         return; //don't save this change
       }
+      // WIP for issue 23 
+      //this.resumeObservingChanges();
 
       var srIndex = change[0][0], // e.g. 0
           column = change[0][1], // e.g. annotCellLine

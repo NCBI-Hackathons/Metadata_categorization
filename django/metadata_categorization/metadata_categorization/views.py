@@ -39,6 +39,7 @@ class QueueView(generic.TemplateView):
             "sourceDevStage": "",
             "sourceSex": "",
             "sourceAnatomy": "",
+            "harvestSite": "",
             "sourceSpecies": "",
             "sourceDisease": "",
             "note": ""
@@ -53,6 +54,7 @@ class QueueView(generic.TemplateView):
             "annotDevStage": "",
             "annotSex": "",
             "annotAnatomy": "",
+            "harvestSite": "",
             "annotSpecies": "",
             "annotSpecies": "",
             "annotDisease": "",
@@ -221,6 +223,7 @@ class RecordView(generic.TemplateView):
                 'annotCellType': data['annotCellType'],
                 'annotCellTreatment': data['annotCellTreatment'],
                 'annotAnatomy': data['annotAnatomy'],
+                'harvestSite': data['harvestSite'],
                 'annotSpecies': data['annotSpecies'],
                 'annotDisease': data['annotDisease'],
                 'note': data['note']

@@ -16,12 +16,27 @@
   </script>
 </head>
 <body>
-  <h1>Queue {{ id }} | Metadata categorization</h1>
-  <p class="subtitle">
-  Curate <a href="http://www.ncbi.nlm.nih.gov/biosample" target="_blank">NCBI BioSample</a>
-  records with controlled terms from the
-  <a href="http://www.clo-ontology.org" target="_blank">Cell Line Ontology</a>
-  </p>
+  <div id="top">
+    <div class="left">
+      <h1>Queue {{ id }} | Metadata categorization</h1>
+      <p class="subtitle">
+      Curate <a href="http://www.ncbi.nlm.nih.gov/biosample" target="_blank">NCBI BioSample</a>
+      records with controlled terms from the
+      <a href="http://www.clo-ontology.org" target="_blank">Cell Line Ontology</a>
+      </p>
+    </div>
+    <div class="right" style="display:none;">
+      <ul>
+        <li>Cell line: <a href="http://www.ontobee.org/ontology/CL">Cell Line Ontology (CLO)</a></li>
+        <li>Cell type: <a href="http://www.ontobee.org/ontology/CL">Cell Ontology (CL)</a></li>
+        {% if summary_records.0.taxId != '9606' %}
+        <li>Anatomy and Harvest Site: <a href="http://www.ontobee.org/ontology/UBERON">UBERON</a></li>
+        <li>Disease: <a href="http://www.ontobee.org/ontology/DOID">Disease Ontology (DO)</a></li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+  <div id="bottom">
   <div id="queue" class="handsontable"></div>
   <div id="irDialog" class="hidden">
     <div id="irContainer"></div>
@@ -32,6 +47,7 @@
      "Disease" is one of "Disease", "Health state", or "Phenotype".
      <a target="_blank" href="https://github.com/NCBI-Hackathons/Metadata_categorization/blob/master/metadata/src/gov/nih/ncbi/solr/PopulateRecordsJob.java">Source</a>.
   </p>
+ </div>
   {% csrf_token %}
 </body>
 </html>

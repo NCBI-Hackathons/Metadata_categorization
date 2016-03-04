@@ -36,3 +36,15 @@ body {
 	font-style: italic;
 	background-color: #DFFFDF;
 }
+
+.left {
+	float: left;
+}
+
+.right {
+	float: right;
+}
+
+#bottom {
+	float: left;
+}
