@@ -193,10 +193,11 @@ $(document).ready(function() {
     sortIndicator: true,
     columnSorting: true,
     contextMenu: true,
-    colWidths: [7, 10, , , , , 40,],
+    colWidths: [7, 10, , , , , , 15, 30,],
     colHeaders: [
       '', '#', 'Source cell line*', 'Cell line*', 'Cell type', 'Anatomy',
-      'Species', 'Disease*', 'Note'
+      'Dev. stage', 'Sex', 'Species',
+      'Disease*', 'Note'
     ],
     columns: [
       {
@@ -208,6 +209,8 @@ $(document).ready(function() {
       {data: 'annotCellLine', renderer: renderSourceOrAnnot},
       {data: 'annotCellType', renderer: renderSourceOrAnnot},
       {data: 'annotAnatomy', renderer: renderSourceOrAnnot},
+      {data: 'annotDevStage', renderer: renderSourceOrAnnot},
+      {data: 'annotSex', renderer: renderSourceOrAnnot},
       {data: 'annotSpecies', renderer: renderSourceOrAnnot},
       {data: 'annotDisease', renderer: renderSourceOrAnnot},
       {data: 'note'}
@@ -239,25 +242,15 @@ $(document).ready(function() {
           srValue,
           editedIR;
 
-
-      var editedIndividualRecord = {
-        'id': id,
-        //'sourceCellLine': data[1],
-        'annotCellLine': data[2],
-        'annotCellType': data[3],
-        'annotAnatomy': data[4],
-        'annotSpecies': data[5],
-        'annotDisease': data[6],
-        'note': data[7]
-      };
-
       var srDataIndexToIRFieldMap = {
         '3': 'annotCellLine',
         '4': 'annotCellType',
         '5': 'annotAnatomy',
-        '6': 'annotSpecies',
-        '7': 'annotDisease',
-        '8': 'note'
+        '6': 'annotDevStage',
+        '7': 'annotSex',
+        '8': 'annotSpecies',
+        '9': 'annotDisease',
+        '10': 'note'
       }
 
       var editedIRs = [];

@@ -223,7 +223,10 @@ class RecordView(generic.TemplateView):
                 'annotCellLine': data['annotCellLine'],
                 'annotCellType': data['annotCellType'],
                 'annotAnatomy': data['annotAnatomy'],
+                'annotDevStage': data['annotDevStage'],
+                'annotSex': data['annotSex'],
                 'annotSpecies': data['annotSpecies'],
+                'annotDisease': data['annotDisease'],
                 'note': data['note']
             }
         else:
@@ -233,6 +236,8 @@ class RecordView(generic.TemplateView):
                 'annotCellTreatment': data['annotCellTreatment'],
                 'annotAnatomy': data['annotAnatomy'],
                 'harvestSite': data['harvestSite'],
+                'annotDevStage': data['annotDevStage'],
+                'annotSex': data['annotSex'],
                 'annotSpecies': data['annotSpecies'],
                 'annotDisease': data['annotDisease'],
                 'note': data['note']
