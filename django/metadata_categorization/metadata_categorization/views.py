@@ -67,6 +67,13 @@ class QueueView(generic.TemplateView):
         summary_record.update(source_fields)
         summary_record.update(annot_fields)
 
+        ir_fields = summary_record.copy()
+        ir_fields.update({
+            'id': '',
+            'taxId': ''
+        })
+        del ir_fields['individualRecords']
+
         individual_records = sorted(
                         individual_records,
                         key=lambda k: k['sourceCellLine']
@@ -76,9 +83,11 @@ class QueueView(generic.TemplateView):
         s = []
         for i, individual_record in enumerate(individual_records):
             tmp_IR = {}
-            for field in individual_record:
+            for field in ir_fields:
                 #if field == 'sourceDisease' or field == 'annotDisease':
                 #    continue
+                if field not in individual_record:
+                    individual_record[field] = ''
                 this_field = individual_record[field]
                 tmp_IR[field] = this_field
                 if this_field == '0' or this_field == "   ":
@@ -232,12 +241,7 @@ class RecordView(generic.TemplateView):
         nr = {'id': id} # new record
         for key in record:
             value = record[key]
-            if value == '':
-                # We store empty strings as "0" in Solr.  I forget exactly why.
-                # TODO: Investigate why.  If needed, document, else refactor.
-                nr[key] = {'set': '0'}
-            else:
-                nr[key] = {'set': value}
+            nr[key] = {'set': value}
 
         return nr
 
