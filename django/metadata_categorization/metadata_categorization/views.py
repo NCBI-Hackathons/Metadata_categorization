@@ -16,9 +16,9 @@ class QueueView(generic.TemplateView):
     template_name = 'metadata_categorization/queue.html'
 
     def get_summary_records(self, individual_records):
-        """
+        '''
         Aggregates individual Biosample (SRA or GEO) records into
-        "summary records" shown as top-level table rows in the UI.  Individual
+        'summary records' shown as top-level table rows in the UI.  Individual
         records are grouped into the same summary record only if they have
         the same 'sourceCellLine' value.
 
@@ -28,42 +28,42 @@ class QueueView(generic.TemplateView):
 
         It was unclear whether/how such aggregation was possible in Solr itself,
         so we're doing it in the web tier.
-        """
+        '''
 
         source_fields = {
-            "sampleName": "",
-            "sampleTitle": "",
-            "sourceCellLine": "",
-            "sourceCellType": "",
-            "sourceCellTreatment": "",
-            "sourceDevStage": "",
-            "sourceSex": "",
-            "sourceAnatomy": "",
-            "harvestSite": "",
-            "sourceSpecies": "",
-            "sourceDisease": "",
-            "note": ""
+            'sampleName': '',
+            'sampleTitle': '',
+            'sourceCellLine': '',
+            'sourceCellType': '',
+            'sourceCellTreatment': '',
+            'sourceDevStage': '',
+            'sourceSex': '',
+            'sourceAnatomy': '',
+            'harvestSite': '',
+            'sourceSpecies': '',
+            'sourceDisease': '',
+            'note': ''
         }
 
         annot_fields = {
-            "sampleName": "",
-            "sampleTitle": "",
-            "annotCellLine": "",
-            "annotCellType": "",
-            "annotCellTreatment": "",
-            "annotDevStage": "",
-            "annotSex": "",
-            "annotAnatomy": "",
-            "harvestSite": "",
-            "annotSpecies": "",
-            "annotSpecies": "",
-            "annotDisease": "",
-            "note": ""
+            'sampleName': '',
+            'sampleTitle': '',
+            'annotCellLine': '',
+            'annotCellType': '',
+            'annotCellTreatment': '',
+            'annotDevStage': '',
+            'annotSex': '',
+            'annotAnatomy': '',
+            'harvestSite': '',
+            'annotSpecies': '',
+            'annotSpecies': '',
+            'annotDisease': '',
+            'note': ''
         }
 
         summary_records = []
 
-        summary_record = {"individualRecords": []}
+        summary_record = {'individualRecords': []}
         summary_record.update(source_fields)
         summary_record.update(annot_fields)
 
@@ -90,10 +90,10 @@ class QueueView(generic.TemplateView):
                     individual_record[field] = ''
                 this_field = individual_record[field]
                 tmp_IR[field] = this_field
-                if this_field == '0' or this_field == "   ":
-                    individual_records[i][field] = ""
-                    individual_record[field] = ""
-                    tmp_IR[field] = ""
+                if this_field == '0' or this_field == '   ':
+                    individual_records[i][field] = ''
+                    individual_record[field] = ''
+                    tmp_IR[field] = ''
 
             individual_record = tmp_IR
             tmp_IRs.append(individual_record)
@@ -101,26 +101,26 @@ class QueueView(generic.TemplateView):
         individual_records = tmp_IRs
 
         for i, individual_record in enumerate(individual_records):
-            if "sourceCellLine" not in individual_record:
-                individual_records[i]["sourceCellLine"] = ""
+            if 'sourceCellLine' not in individual_record:
+                individual_records[i]['sourceCellLine'] = ''
 
-            cellLine = individual_records[i]["sourceCellLine"]
+            cellLine = individual_records[i]['sourceCellLine']
 
-            prev_cell_line = individual_records[i-1]["sourceCellLine"]
+            prev_cell_line = individual_records[i-1]['sourceCellLine']
 
             if cellLine == prev_cell_line or i == 0:
-                summary_record["individualRecords"].append(individual_record)
+                summary_record['individualRecords'].append(individual_record)
             else:
-                recordsCount = summary_record["individualRecords"]
+                recordsCount = summary_record['individualRecords']
                 summary_record['recordsCount'] = len(recordsCount)
 
-                if len(summary_record["individualRecords"]) > 0:
+                if len(summary_record['individualRecords']) > 0:
                     summary_record['sourceCellLine'] = prev_cell_line
 
                 summary_records.append(summary_record)
                 summary_record = {
-                    "individualRecords": [individual_record],
-                    "index": i
+                    'individualRecords': [individual_record],
+                    'index': i
                 }
                 summary_record.update(source_fields)
                 summary_record.update(annot_fields)
@@ -142,12 +142,12 @@ class QueueView(generic.TemplateView):
                         prev_fields[field] = individual_record[field]
                     else:
                         if (
-                            prev_fields[field] != "" and
+                            prev_fields[field] != '' and
                             prev_fields[field] == individual_record[field]
                         ):
                             new_SR[field] = prev_fields[field]
                         else:
-                            new_SR[field] = ""
+                            new_SR[field] = ''
             new_SRs.append(new_SR)
         summary_records = new_SRs
 
@@ -168,24 +168,24 @@ class QueueView(generic.TemplateView):
         # Refactor into modular methods and models
 
         # Call Solr
-        #solr_host = "http://localhost:8983/solr/AnnotationsDev"
-        solr_host = "http://localhost:8983/solr/annotation"
+        #solr_host = 'http://localhost:8983/solr/AnnotationsDev'
+        solr_host = 'http://localhost:8983/solr/annotation'
 
         # %3A is :
-        # sampleName%3A* is sampleName:*"
-        url = (solr_host + "/select?" +
-              #"q=queueId%3A42&" +
+        # sampleName%3A* is sampleName:*'
+        url = (solr_host + '/select?' +
+              #'q=queueId%3A42&' +
               'q=queueId%3A' + queueId + '+AND+NOT+sourceCellLine%3A%220%22'
-              "start=0&" +
-              "rows=10000&" +
-              "wt=json&" +
-              "indent=true&")
+              'start=0&' +
+              'rows=10000&' +
+              'wt=json&' +
+              'indent=true&')
 
         request = urllib.request.Request(url)
         response = urllib.request.urlopen(request)
         str_response = response.readall().decode('utf-8')
 
-        solr_data = json.loads(str_response)["response"]["docs"]
+        solr_data = json.loads(str_response)['response']['docs']
 
         #print(solr_data)
 
@@ -207,8 +207,8 @@ class QueueView(generic.TemplateView):
         # Demo'd URL:
         # http://localhost:8000/queue/6
 
-        context["id"] = queueId
-        context["summary_records"] = summary_records
+        context['id'] = queueId
+        context['summary_records'] = summary_records
 
         return context
 
@@ -249,16 +249,16 @@ class RecordView(generic.TemplateView):
         # POST request body, representing an edited individual record
         body = str(records).encode('utf-8')
 
-        solr_host = "http://localhost:8983/solr/annotation"
-        #solr_host = "http://localhost:8983/solr/AnnotationsDev"
-        url = solr_host + "/update?commit=true"
+        solr_host = 'http://localhost:8983/solr/annotation'
+        #solr_host = 'http://localhost:8983/solr/AnnotationsDev'
+        url = solr_host + '/update?commit=true'
 
-        # Example POST to update part of a Solr document in "annotation" core:
-        # curl 'http://localhost:8983/solr/annotation/update?commit=true' -d "[{'annotAnatomy': {'set': '0'}, 'annotDisease': {'set': '0'}, 'annotSpecies': {'set': '0'}, 'id': '1090570', 'annotCellType': {'set': '0'}, 'annotCellLine': {'set': 'test'}}]"
+        # Example POST to update part of a Solr document in 'annotation' core:
+        # curl 'http://localhost:8983/solr/annotation/update?commit=true' -d '[{'annotAnatomy': {'set': '0'}, 'annotDisease': {'set': '0'}, 'annotSpecies': {'set': '0'}, 'id': '1090570', 'annotCellType': {'set': '0'}, 'annotCellLine': {'set': 'test'}}]'
         # Example read:
         # curl 'http://localhost:8983/solr/annotation/select?wt=json&q=id:1090570'
         # Another POST / partial update example:
-        # curl 'http://localhost:8983/solr/annotation/update?commit=true' -d '[{"id": 3854415, "sourceCellLine": {"set": "testfoo"}}]'
+        # curl 'http://localhost:8983/solr/annotation/update?commit=true' -d '[{'id': 3854415, 'sourceCellLine': {'set': 'testfoo'}}]'
         request = urllib.request.Request(url, body)
         request.add_header('Content-Type', 'application/json')
         response = urllib.request.urlopen(request)
