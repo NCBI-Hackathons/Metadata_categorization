@@ -184,7 +184,7 @@ $(document).ready(function() {
 
   var container = document.getElementById('queue');
 
-  var queueHeight = window.innerHeight - 160;
+  var queueHeight = window.innerHeight - 170;
 
   queue = new Handsontable(container, {
     data: summaryRecords,
@@ -221,7 +221,7 @@ $(document).ready(function() {
       if (source === 'loadData' || source === 'external') {
         return; //don't save this change
       }
-      // WIP for issue 23 
+      // WIP for issue 23
       //this.resumeObservingChanges();
 
       var srIndex = change[0][0], // e.g. 0
