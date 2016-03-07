@@ -155,6 +155,23 @@ plusEditor.prototype.prepare = function(row, col, prop, td, originalValue, cellP
 
       summaryRecords[srIndex][irIndex] = editedIndividualRecord;
 
+      // Ensures that edits which should be proprogated to summary level are
+      // Issue #27
+      var individualRecords = summaryRecords[srIndex]['individualRecords'];
+      var consistentIRFields = individualRecords[0];
+      var ir;
+      if (individualRecords.length > 1) {
+        for (var i = 1; i < individualRecords.length; i++) {
+          ir = individualRecords[i];
+          for (var field in ir) {
+            if (ir[field] != consistentIRFields[field]) {
+              delete consistentIRFields[field];
+            }
+          }
+        }
+      }
+      $.extend(summaryRecords[srIndex], consistentIRFields);
+
       $.ajax({
         'url': '/record/' + id,
         'method': 'POST',
