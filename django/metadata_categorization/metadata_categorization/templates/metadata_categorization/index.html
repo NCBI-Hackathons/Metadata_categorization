@@ -1,1 +1,21 @@
-Hello!
+{% load staticfiles %}
+
+<html>
+<head>
+  <title>Metadata categorization</title>
+  <link type="text/css" rel="stylesheet" href="{%static 'metadata_categorization/style.css' %}"/>
+</head>
+<body>
+  <div id="top">
+      <h1>Metadata categorization</h1>
+      <p class="subtitle">
+      Curate <a href="http://www.ncbi.nlm.nih.gov/biosample" target="_blank">NCBI BioSample</a>
+      records with controlled terms from biomedical ontologies
+      </p>
+      <ul>
+        <li>Homo sapiens: queues <a href="queue/1">1</a> - <a href="queue/455">455</a></li>
+        <li>Drosophila melanogaster: queues <a href="queue/456">456</a> - <a href="queue/476">476</a></li>
+      </ul>
+ </div>
+</body>
+</html>
