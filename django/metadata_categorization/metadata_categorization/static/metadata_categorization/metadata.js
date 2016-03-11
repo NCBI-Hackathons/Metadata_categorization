@@ -109,9 +109,9 @@ plusEditor.prototype.prepare = function(row, col, prop, td, originalValue, cellP
     ],
     columns: [
       {data: 'id', readOnly: true, renderer: renderBiosampleId},
-      {data: 'sourceCellLine'},
-      {data: 'sampleName'},
-      {data: 'sampleTitle'},
+      {data: 'sourceCellLine', readOnly: true},
+      {data: 'sampleName', readOnly: true},
+      {data: 'sampleTitle', readOnly: true},
       {data: 'annotCellLine', renderer: renderIRSourceOrAnnot},
       {data: 'annotCellType', renderer: renderIRSourceOrAnnot},
       {data: 'annotCellTreatment', renderer: renderIRSourceOrAnnot},
