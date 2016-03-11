@@ -131,6 +131,7 @@ plusEditor.prototype.prepare = function(row, col, prop, td, originalValue, cellP
         return; //don't save this change
       }
 
+
       var irIndex = change[0][0], // e.g. 0
           column = change[0][1], // e.g. annotCellLine
           oldValue = change[0][2], // e.g. null
@@ -153,12 +154,10 @@ plusEditor.prototype.prepare = function(row, col, prop, td, originalValue, cellP
         'note': data[13]
       };
 
-      summaryRecords[srIndex][irIndex] = editedIndividualRecord;
-
       // Ensures that edits which should be proprogated to summary level are
       // Issue #27
       var individualRecords = summaryRecords[srIndex]['individualRecords'];
-      var consistentIRFields = individualRecords[0];
+      var consistentIRFields = $.extend({}, individualRecords[0]); // copy
       var ir;
       if (individualRecords.length > 1) {
         for (var i = 1; i < individualRecords.length; i++) {
